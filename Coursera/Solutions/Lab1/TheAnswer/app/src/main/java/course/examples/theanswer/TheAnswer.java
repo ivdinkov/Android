@@ -2,42 +2,44 @@ package course.examples.theanswer;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.widget.TextView;
 import android.util.Log;
+import android.widget.TextView;
 
 public class TheAnswer extends Activity {
 
-	private static final String TAG = "TheAnswer";
-	public static final int[] answers = { 42, -10, 0, 100, 1000 };
-	public static final int answer = 42;
+    public static final int[] answers = {42, -10, 0, 100, 1000};
+    public static final int answer = 42;
+    private static final String TAG = "TheAnswer";
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		
-		// Required call through to Activity.onCreate()
-		// Restore any saved instance state
-		super.onCreate(savedInstanceState);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-		// Set up the application's user interface (content view)
-		setContentView(R.layout.answer_layout);
+        // Required call through to Activity.onCreate()
+        // Restore any saved instance state
+        super.onCreate(savedInstanceState);
 
-		// Get a reference to a TextView in the content view
-		TextView answerView = (TextView) findViewById(R.id.answer_view);
-		Log.i(TAG,"Printing the answer to life");
-		int val = findAnswer();
-		String output = (val == answer) ? "42" : "We may never know";
-		
-		// Set desired text in answerView TextView
-		answerView
-				.setText("The answer to life, the universe and everything is:\n\n"
-						+ output);
-	}
+        // Set up the application's user interface (content view)
+        setContentView(R.layout.answer_layout);
 
-	private int findAnswer() {
-		for (int val : answers) {
-			if (val == answer)
-				return val;
-		}
-		return -1;
-	}
+        // Get a reference to a TextView in the content view
+        TextView answerView = (TextView) findViewById(R.id.answer_view);
+
+        Log.i(TAG, "Printing the answer to life");
+
+        int val = findAnswer();
+        String output = (val == answer) ? "42" : "We may never know";
+
+        // Set desired text in answerView TextView
+        answerView
+                .setText("The answer to life, the universe and everything is:\n\n"
+                        + output);
+    }
+
+    private int findAnswer() {
+        for (int val : answers) {
+            if (val != answer)
+                return val;
+        }
+        return -1;
+    }
 }
