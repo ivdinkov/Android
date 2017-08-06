@@ -1,0 +1,78 @@
+1ba) 
+ActivityOne
+	onCreate()
+	onStart()
+	onResume()
+	Activity running
+button press to start ActivityTow
+	onPause()	
+ActivityTwo
+	onCreate()
+	onStart()
+	onResume()
+	Activity running
+ActivityOne
+	onStop()
+
+
+1ca)
+button pressed => close ActivityTwo
+ActivityTwo
+	onPause()
+ActivityOne
+	oRestart()
+	onStart()
+	onResume()
+	ActivityOne running
+ActivityTwo
+	onStop()
+	onDestroy()
+	ActivityTwo killed
+
+
+1da)
+button press to start ActivityTow
+ActivityOne	
+	onPause()	
+ActivityTwo
+	onCreate()
+	onStart()
+	onResume()
+	Activity running
+ActivityOne
+	onStop()
+HOME button press
+ActivityTwo
+	onPause()
+	onStop()
+
+1ea)
+pess launch icon to start the Application
+ActivityTwo
+	onRestart()
+	onStart()
+	onResume()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
