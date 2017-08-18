@@ -87,7 +87,7 @@
             android:inputType="textEmailAddress"/>
 
         <EditText
-            android:id="@+id/textPass1"
+            android:id="@+id/txtPass1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -96,7 +96,7 @@
             android:inputType="textPassword"/>
 
         <EditText
-            android:id="@+id/textPass2"
+            android:id="@+id/txtPass2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
