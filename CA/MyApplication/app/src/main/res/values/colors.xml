@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#AAAAAA</color>
+    <color name="colorPrimaryDark">#555555</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="light_blue">#a1c2ff</color>
+    <color name="white">#ffffff</color>
+    <color name="btn_register_color">#7197de</color>
+    <color name="register_blue">#7197de</color>
+</resources>
