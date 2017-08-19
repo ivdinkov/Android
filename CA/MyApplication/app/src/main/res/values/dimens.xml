@@ -5,8 +5,8 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="register_title_left_margin">20dip</dimen>
-    <dimen name="register_title_text_size">40dip</dimen>
-    <dimen name="register_wraper_height">250dp</dimen>
+    <dimen name="register_title_text_size">40dp</dimen>
+    <dimen name="register_layout_margin">30dp</dimen>
+    <dimen name="register_button_radius">5dp</dimen>
 
 </resources>
