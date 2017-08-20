@@ -1,115 +1,102 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="100"
     tools:context="ivandinkov.github.com.taxiclerk.RegisterActivity">
-
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:orientation="vertical"
-        android:weightSum="100"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        android:layout_height="0dp"
+        android:layout_weight="20"
+        android:background="@color/register_blue"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@string/register_title"
+            android:gravity="center"
+            android:text="@string/register_title_text"
+            android:textColor="@color/white"
+            android:textSize="@dimen/register_title_text_size"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/registerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="45"
+        android:baselineAligned="false"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/register_email_hint"
+            android:inputType="textEmailAddress"/>
+
+        <EditText
+            android:id="@+id/txtPass1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fivedp"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/register_password_hint"
+            android:inputType="textPassword"/>
+
+        <EditText
+            android:id="@+id/txtPass2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/fivedp"
+            android:ems="10"
+            android:gravity="left"
+            android:hint="@string/register_retypepass_hint"
+            android:inputType="textPassword"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="30"
-            android:background="@color/register_blue"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/txtRegister"
+            <CheckBox
+                android:id="@+id/checkbox_terms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="80dp"
-                android:fontFamily="@string/register_title"
-                android:gravity="center"
-                android:text="@string/register_title_text"
-                android:textColor="@color/white"
-                android:textSize="@dimen/register_title_text_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.121"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.14"/>
+                android:layout_gravity="center_vertical"/>
+
+            <TextView
+                android:id="@+id/terms"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="I accept the terms and conditions"
+                android:textSize="16sp"/>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/registerLayout"
+        <Button
+            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/register_layout_margin"
-            android:layout_weight="60"
-            android:baselineAligned="false"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/register_layout_margin"
+            android:background="@drawable/register_button"
+            android:gravity="center"
+            android:text="@string/btn_register_text"
+            android:textColor="@color/white"/>
 
-            <EditText
-                android:id="@+id/txtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:gravity="left"
-                android:hint="@string/register_email_hint"
-                android:inputType="textEmailAddress"/>
-
-            <EditText
-                android:id="@+id/txtPass1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:gravity="left"
-                android:hint="@string/register_password_hint"
-                android:inputType="textPassword"/>
-
-            <EditText
-                android:id="@+id/txtPass2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:gravity="left"
-                android:hint="@string/register_retypepass_hint"
-                android:inputType="textPassword"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_margin="@dimen/register_layout_margin"
-            android:layout_weight="10"
-            android:baselineAligned="false"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/btnRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/register_button"
-                android:gravity="center"
-                android:text="@string/btn_register_text"
-                android:textColor="@color/white"/>
-
-        </LinearLayout>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
