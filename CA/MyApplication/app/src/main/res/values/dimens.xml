@@ -8,5 +8,6 @@
     <dimen name="register_title_text_size">40dp</dimen>
     <dimen name="register_layout_margin">30dp</dimen>
     <dimen name="register_button_radius">5dp</dimen>
+    <dimen name="fivedp">5dp</dimen>
 
 </resources>
