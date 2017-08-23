@@ -1,0 +1,18 @@
+#Internal package file, do not edit.
+#Tue Aug 22 16:09:35 BST 2017
+1.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_
+4.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\activity_loader_activity.xml
+1.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\explicitly_loaded_activity.xml
+4.set=ANDROID_RESOURCE
+2.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_
+3.set=ANDROID_RESOURCE
+2.set=ANDROID_RESOURCE
+2.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-xhdpi-v4\\ic_launcher.png
+count=5
+1.set=ANDROID_RESOURCE
+3.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_
+0.set=ANDROID_RESOURCE
+0.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_
+3.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_\\AndroidManifest.xml
+0.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_\\resources.arsc
+4.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab3\\Lab3a\\Lab3a_IntentsLab\\app\\build\\intermediates\\res\\resources-debug.ap_
