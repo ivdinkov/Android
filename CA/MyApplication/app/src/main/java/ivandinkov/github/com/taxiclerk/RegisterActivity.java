@@ -104,7 +104,9 @@ public class RegisterActivity extends AppCompatActivity {
 	 * Dialog class used to display terms fragment
 	 */
 	public static class MyDialog extends DialogFragment {
-		private View customView;
+		View customView;
+		TextView btnYes;
+		TextView txtTerms;
 		
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -116,8 +118,8 @@ public class RegisterActivity extends AppCompatActivity {
 			customView = inflater.inflate(R.layout.terms_dialog, null);
 			customView.setMinimumWidth((int) (displayRectangle.width() * 0.9f));
 			customView.setMinimumHeight((int) (displayRectangle.height() * 0.9f));
-			TextView btnYes = (TextView) customView.findViewById(R.id.btnDialogYes);
-			TextView txtTerms = (TextView) customView.findViewById(R.id.txtTemrs);
+			btnYes = (TextView) customView.findViewById(R.id.btnDialogYes);
+			txtTerms = (TextView) customView.findViewById(R.id.txtTemrs);
 			txtTerms.setMovementMethod(new ScrollingMovementMethod());
 			alertDialogBuilder.setContentView(customView);
 			
