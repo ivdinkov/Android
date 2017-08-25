@@ -1,4 +1,4 @@
-package labs.course.lab4_modernartui;
+package labs.course.modernartui;
 
 import org.junit.Test;
 

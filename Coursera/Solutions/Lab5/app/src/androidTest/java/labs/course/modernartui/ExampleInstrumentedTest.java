@@ -1,4 +1,4 @@
-package labs.course.lab4_modernartui;
+package labs.course.modernartui;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -20,7 +20,7 @@ public class ExampleInstrumentedTest {
 	public void useAppContext() throws Exception {
 		// Context of the app under test.
 		Context appContext = InstrumentationRegistry.getTargetContext();
-
-		assertEquals("labs.course.lab4_modernartui", appContext.getPackageName());
+		
+		assertEquals("labs.course.modernartui", appContext.getPackageName());
 	}
 }
