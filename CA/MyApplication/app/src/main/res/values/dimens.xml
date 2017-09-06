@@ -9,5 +9,6 @@
     <dimen name="register_layout_margin">30dp</dimen>
     <dimen name="register_button_radius">5dp</dimen>
     <dimen name="fivedp">5dp</dimen>
+    <dimen name="btn_job_exp">50dp</dimen>
 
 </resources>
