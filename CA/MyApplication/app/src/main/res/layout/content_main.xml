@@ -29,11 +29,11 @@
 
         <!-- Add new job -->
         <Button
-            android:id="@+id/new_job"
+            android:id="@+id/new_fare"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/btn_job_exp"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_new_fare"
             android:text="Add Fare"/>
         <!-- Add new expense -->

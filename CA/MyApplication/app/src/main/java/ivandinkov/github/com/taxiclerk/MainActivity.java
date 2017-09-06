@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import static ivandinkov.github.com.taxiclerk.R.styleable.NavigationView;
 
@@ -29,7 +30,9 @@ public class MainActivity extends AppCompatActivity
 				IncomeFragment.OnFragmentInteractionListener,
 				ExpenseFragment.OnFragmentInteractionListener,
 				ReportFragment.OnFragmentInteractionListener,
-				SettingsFragment.OnFragmentInteractionListener
+				SettingsFragment.OnFragmentInteractionListener,
+				NewFareFragment.OnFragmentInteractionListener,
+				NewExpenseFragment.OnFragmentInteractionListener
 
 {
 	
@@ -59,40 +62,65 @@ public class MainActivity extends AppCompatActivity
 			displayView(1);
 		}
 		
+		Button btnAddFare = (Button) findViewById(R.id.new_fare);
+		btnAddFare.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				displayView(6);
+			}
+		});
+		Button btnAddExpense = (Button) findViewById(R.id.new_expense);
+		btnAddExpense.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				displayView(7);
+			}
+		});
+		
 	}
 	
 	private void displayView(int position) {
 		// update the main content by replacing fragments
 		Fragment fragment = null;
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 		switch (position) {
 			case 1:
 				fragment = new HomeFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
-				fragID = 1;
 				break;
 			case 2:
 				fragment = new IncomeFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "income").commit();
-				fragID = 2;
 				break;
 			case 3:
 				fragment = new ExpenseFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "expense").commit();
-				fragID = 3;
 				break;
 			case 4:
 				fragment = new ReportFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "reports").commit();
-				fragID = 4;
-				break;
+			break;
 			case 5:
 				fragment = new SettingsFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
-				fragID = 5;
 				break;
 			case 6:
+				fragment = new NewFareFragment();
+				ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
+				ft.replace(R.id.main_fragment_container, fragment, "new fare").commit();
+				break;
+			case 7:
+				fragment = new NewExpenseFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "new expense").commit();
+				break;
+			
+			case 8:
 				// Exit App
 				SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 				editor.putString("logged", "no");
@@ -127,7 +155,7 @@ public class MainActivity extends AppCompatActivity
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
-			super.onBackPressed();
+			displayView(1);
 		}
 	}
 	
@@ -170,7 +198,7 @@ public class MainActivity extends AppCompatActivity
 		} else if (id == R.id.nav_settings) {
 			displayView(5);
 		} else if (id == R.id.nav_logout) {
-			displayView(6);
+			displayView(7);
 		} else if (id == R.id.nav_share) {
 			
 		} else if (id == R.id.nav_send) {
