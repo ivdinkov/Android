@@ -7,4 +7,5 @@
     <color name="white">#ffffff</color>
     <color name="btn_register_color">#7197de</color>
     <color name="register_blue">#7197de</color>
+    <color name="pager_bg_blue">#5877b1</color>
 </resources>
