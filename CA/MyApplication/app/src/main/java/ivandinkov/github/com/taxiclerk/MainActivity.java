@@ -1,8 +1,13 @@
 package ivandinkov.github.com.taxiclerk;
 
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,8 +18,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import static ivandinkov.github.com.taxiclerk.R.styleable.NavigationView;
+
 public class MainActivity extends AppCompatActivity
-				implements NavigationView.OnNavigationItemSelectedListener {
+				implements NavigationView.OnNavigationItemSelectedListener,
+				HomeFragment.OnFragmentInteractionListener,
+				DayFragment.OnFragmentInteractionListener,
+				MonthFragment.OnFragmentInteractionListener,
+				YearFragment.OnFragmentInteractionListener,
+				IncomeFragment.OnFragmentInteractionListener,
+				ExpenseFragment.OnFragmentInteractionListener,
+				ReportFragment.OnFragmentInteractionListener,
+				SettingsFragment.OnFragmentInteractionListener
+
+{
+	
+	
+	// Id to hold fragment to be displayed
+	int fragID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,14 +44,6 @@ public class MainActivity extends AppCompatActivity
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		
-		FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-		fab.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-								.setAction("Action", null).show();
-			}
-		});
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -40,6 +53,72 @@ public class MainActivity extends AppCompatActivity
 		
 		NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 		navigationView.setNavigationItemSelectedListener(this);
+		
+		if (savedInstanceState == null) {
+			// on first time display view for first nav item
+			displayView(1);
+		}
+		
+	}
+	
+	private void displayView(int position) {
+		// update the main content by replacing fragments
+		Fragment fragment = null;
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+		switch (position) {
+			case 1:
+				fragment = new HomeFragment();
+				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
+				fragID = 1;
+				break;
+			case 2:
+				fragment = new IncomeFragment();
+				ft.replace(R.id.main_fragment_container, fragment, "income").commit();
+				fragID = 2;
+				break;
+			case 3:
+				fragment = new ExpenseFragment();
+				ft.replace(R.id.main_fragment_container, fragment, "expense").commit();
+				fragID = 3;
+				break;
+			case 4:
+				fragment = new ReportFragment();
+				ft.replace(R.id.main_fragment_container, fragment, "reports").commit();
+				fragID = 4;
+				break;
+			case 5:
+				fragment = new SettingsFragment();
+				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
+				fragID = 5;
+				break;
+			case 6:
+				// Exit App
+				SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+				editor.putString("logged", "no");
+				editor.apply();
+				finish();
+				break;
+			
+			default:
+				break;
+		}
+		
+		if (fragment != null) {
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.beginTransaction().replace(R.id.main_fragment_container,
+							fragment).commit();
+			
+			// update selected item and title, then close the drawer
+//			mDrawerList.setItemChecked(position, true);
+//			mDrawerList.setSelection(position);
+//			setTitle(navMenuTitles[position]);
+//			mDrawerLayout.closeDrawer(mDrawerList);
+//			// save win title
+			
+		} else {
+			finish();
+		}
 	}
 	
 	@Override
@@ -80,14 +159,18 @@ public class MainActivity extends AppCompatActivity
 		// Handle navigation view item clicks here.
 		int id = item.getItemId();
 		
-		if (id == R.id.nav_camera) {
-			// Handle the camera action
-		} else if (id == R.id.nav_gallery) {
+		if (id == R.id.nav_home) {
+			displayView(1);
+		} else if (id == R.id.nav_jobs) {
 			
-		} else if (id == R.id.nav_slideshow) {
+		} else if (id == R.id.nav_expenses) {
 			
-		} else if (id == R.id.nav_manage) {
-			
+		} else if (id == R.id.nav_reports) {
+			displayView(4);
+		} else if (id == R.id.nav_settings) {
+			displayView(5);
+		} else if (id == R.id.nav_logout) {
+			displayView(6);
 		} else if (id == R.id.nav_share) {
 			
 		} else if (id == R.id.nav_send) {
@@ -97,5 +180,10 @@ public class MainActivity extends AppCompatActivity
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
 		return true;
+	}
+	
+	@Override
+	public void onFragmentInteraction(Uri uri) {
+		
 	}
 }
