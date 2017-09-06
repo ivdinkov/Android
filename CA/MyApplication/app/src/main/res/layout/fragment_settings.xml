@@ -1,13 +1,19 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context="ivandinkov.github.com.taxiclerk.SettingsFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="ivandinkov.github.com.taxiclerk.SettingsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+
     <TextView
+        android:id="@+id/txtSetJobProv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="SETTINGS TO BE REMOVED"/>
+        android:layout_height="@dimen/trezerodp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:text="Set Job provider"
+        android:textColor="#151515"/>
 
-</FrameLayout>
+</LinearLayout>

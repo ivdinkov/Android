@@ -10,5 +10,6 @@
     <dimen name="register_button_radius">5dp</dimen>
     <dimen name="fivedp">5dp</dimen>
     <dimen name="btn_job_exp">50dp</dimen>
+    <dimen name="trezerodp">30dp</dimen>
 
 </resources>

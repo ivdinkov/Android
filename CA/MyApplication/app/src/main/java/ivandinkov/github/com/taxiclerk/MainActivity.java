@@ -3,8 +3,6 @@ package ivandinkov.github.com.taxiclerk;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -18,8 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
-
-import static ivandinkov.github.com.taxiclerk.R.styleable.NavigationView;
+import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity
 				implements NavigationView.OnNavigationItemSelectedListener,
@@ -35,18 +32,14 @@ public class MainActivity extends AppCompatActivity
 				NewExpenseFragment.OnFragmentInteractionListener
 
 {
-	
-	
-	// Id to hold fragment to be displayed
-	int fragID;
-	
+	LinearLayout btnHolder;
+	boolean isFirstTime = true;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -60,7 +53,10 @@ public class MainActivity extends AppCompatActivity
 		if (savedInstanceState == null) {
 			// on first time display view for first nav item
 			displayView(1);
+			isFirstTime = false;
 		}
+		// get linear layout reference
+		btnHolder = (LinearLayout) findViewById(R.id.income_button_holder);
 		
 		Button btnAddFare = (Button) findViewById(R.id.new_fare);
 		btnAddFare.setOnClickListener(new View.OnClickListener() {
@@ -85,26 +81,42 @@ public class MainActivity extends AppCompatActivity
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		switch (position) {
 			case 1:
+				// Show buttons
+					if (!isFirstTime) {
+						btnHolder.setVisibility(View.VISIBLE);
+					}
 				fragment = new HomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 				break;
 			case 2:
+				// Hide buttons to make space for settings fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show all Jobs
 				fragment = new IncomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "income").commit();
 				break;
 			case 3:
+				// Hide buttons to make space for settings fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show All expenses
 				fragment = new ExpenseFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "expense").commit();
 				break;
 			case 4:
+				// Hide buttons to make space for settings fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show Reports
 				fragment = new ReportFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "reports").commit();
-			break;
+				break;
 			case 5:
+				// Hide buttons to make space for settings fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show Settings
 				fragment = new SettingsFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
@@ -155,7 +167,11 @@ public class MainActivity extends AppCompatActivity
 		if (drawer.isDrawerOpen(GravityCompat.START)) {
 			drawer.closeDrawer(GravityCompat.START);
 		} else {
+			// Disable Android back button
 			displayView(1);
+			// Show buttons
+			btnHolder.setVisibility(View.VISIBLE);
+			//super.onBackPressed();
 		}
 	}
 	
@@ -190,9 +206,9 @@ public class MainActivity extends AppCompatActivity
 		if (id == R.id.nav_home) {
 			displayView(1);
 		} else if (id == R.id.nav_jobs) {
-			
+			displayView(2);
 		} else if (id == R.id.nav_expenses) {
-			
+			displayView(3);
 		} else if (id == R.id.nav_reports) {
 			displayView(4);
 		} else if (id == R.id.nav_settings) {
@@ -207,6 +223,7 @@ public class MainActivity extends AppCompatActivity
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		drawer.closeDrawer(GravityCompat.START);
+		
 		return true;
 	}
 	

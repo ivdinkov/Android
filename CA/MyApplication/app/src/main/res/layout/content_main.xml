@@ -9,23 +9,23 @@
               tools:context="ivandinkov.github.com.taxiclerk.MainActivity"
               tools:showIn="@layout/app_bar_main">
 
-
     <FrameLayout
         android:id="@+id/main_fragment_container"
         android:layout_width="match_parent"
-        android:background="@color/white"
         android:layout_height="0dp"
         android:layout_weight="0.85"
+        android:background="@color/white"
         >
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/income_button_holder"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.15"
         android:background="@color/white"
-        android:padding="5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="5dp">
 
         <!-- Add new job -->
         <Button
@@ -42,10 +42,9 @@
             android:id="@+id/new_expense"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/btn_job_exp"
-            android:layout_weight="1"
             android:layout_margin="5dp"
+            android:layout_weight="1"
             android:background="@drawable/btn_new_expense"
             android:text="Add Expense"/>
     </LinearLayout>
-
 </LinearLayout>

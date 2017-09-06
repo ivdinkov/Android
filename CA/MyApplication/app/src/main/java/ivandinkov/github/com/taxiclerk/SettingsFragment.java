@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 
 /**
@@ -64,7 +68,24 @@ public class SettingsFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_settings, container, false);
+		View v = inflater.inflate(R.layout.fragment_settings, container, false);
+		
+		// Set all view assets
+		
+		// Set text view to call new Provider Fragment
+		TextView setJobProvider = (TextView) v.findViewById(R.id.txtSetJobProv);
+		setJobProvider.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+//				Fragment fragment = null;
+//				FragmentTransaction ft = getFragmentManager().beginTransaction();
+//				//fragment = new AddJobProvider();
+//				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+//				ft.replace(R.id.main_fragment_container, fragment, "job provider").commit();
+			}
+		});
+		
+		return v;
 	}
 	
 	// TODO: Rename method, update argument and hook method into UI event
