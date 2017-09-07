@@ -70,18 +70,15 @@ public class SettingsFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View v = inflater.inflate(R.layout.fragment_settings, container, false);
 		
-		// Set all view assets
-		
 		// Set text view to call new Provider Fragment
 		TextView setJobProvider = (TextView) v.findViewById(R.id.txtSetJobProv);
 		setJobProvider.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				Fragment fragment = null;
-//				FragmentTransaction ft = getFragmentManager().beginTransaction();
-//				//fragment = new AddJobProvider();
-//				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-//				ft.replace(R.id.main_fragment_container, fragment, "job provider").commit();
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				Fragment fragment = new JobProviderFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "job provider").commit();
 			}
 		});
 		

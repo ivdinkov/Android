@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity
 				ReportFragment.OnFragmentInteractionListener,
 				SettingsFragment.OnFragmentInteractionListener,
 				NewFareFragment.OnFragmentInteractionListener,
-				NewExpenseFragment.OnFragmentInteractionListener
+				NewExpenseFragment.OnFragmentInteractionListener,
+				JobProviderFragment.OnFragmentInteractionListener
 
 {
 	LinearLayout btnHolder;

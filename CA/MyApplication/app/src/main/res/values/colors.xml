@@ -8,4 +8,5 @@
     <color name="btn_register_color">#7197de</color>
     <color name="register_blue">#3a5381</color>
     <color name="pager_bg_blue">#5877b1</color>
+    <color name="dark_blue">#004e6b</color>
 </resources>
