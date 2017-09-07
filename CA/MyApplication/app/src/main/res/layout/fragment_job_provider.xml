@@ -1,17 +1,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             tools:context="ivandinkov.github.com.taxiclerk.JobProviderFragment">
-
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="ivandinkov.github.com.taxiclerk.JobProviderFragment">
 
     <LinearLayout
+        android:id="@+id/list_income"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.88"
         android:orientation="vertical">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:divider="#777777"
+            android:dividerHeight="0.1dp"
+            android:scrollbars="vertical"/>
     </LinearLayout>
+
     <Button
         android:id="@+id/btnAddProvider"
         android:layout_width="match_parent"

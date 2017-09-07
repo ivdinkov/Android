@@ -2,9 +2,13 @@ package ivandinkov.github.com.taxiclerk;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by iv on 06/09/2017.
@@ -71,6 +75,12 @@ public class DB extends SQLiteOpenHelper {
 		// Create tables again
 		onCreate(db);
 	}
+	
+	/**
+	 *
+	 *  PROVIDERS
+	 *
+	 */
 	/** Save provider*/
 	public boolean insertProvider(Provider provider){
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -92,4 +102,43 @@ public class DB extends SQLiteOpenHelper {
 		}
 		return false;
 	}
+	/** Get All Providers */
+	/**
+	 * Gets the all providers.
+	 *
+	 * @return the all providers
+	 */
+	public List<Provider> getAllProviders() {
+		List<Provider> provList = new ArrayList<Provider>();
+		
+		// Select All Query
+		String selectQuery = "SELECT * FROM " + TABLE_PROVIDER + " WHERE " + KEY_PR_ACTIVE + " LIKE 'yes'";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			
+			do {
+				Provider inc = new Provider();
+				
+				inc.setID(Integer.parseInt(cursor.getString(0)));
+				Log.i(TAG,cursor.getString(0));
+				
+				inc.setName(cursor.getString(1));
+				Log.i(TAG,cursor.getString(1));
+				
+				inc.setActive(cursor.getString(2));
+				Log.i(TAG,cursor.getString(2));
+				
+				// Adding contact to list
+				provList.add(inc);
+			} while (cursor.moveToNext());
+		}
+		
+		db.close();
+		return provList;
+	}
+	
 }

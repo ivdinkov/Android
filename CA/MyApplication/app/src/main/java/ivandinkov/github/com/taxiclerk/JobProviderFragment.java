@@ -8,14 +8,20 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.ListFragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,7 +32,7 @@ import android.widget.Toast;
  * Use the {@link JobProviderFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JobProviderFragment extends Fragment {
+public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -39,6 +45,8 @@ public class JobProviderFragment extends Fragment {
 	
 	private OnFragmentInteractionListener mListener;
 	private static Context mContext;
+	private int recordID;
+	private DB db;
 	
 	public JobProviderFragment() {
 		// Required empty public constructor
@@ -75,7 +83,7 @@ public class JobProviderFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View v=inflater.inflate(R.layout.fragment_job_provider, container, false);
+		View v = inflater.inflate(R.layout.fragment_job_provider, container, false);
 		
 		// Initialise button
 		Button btnAddProvider = (Button) v.findViewById(R.id.btnAddProvider);
@@ -85,7 +93,20 @@ public class JobProviderFragment extends Fragment {
 				showDialog();
 			}
 		});
+		// Populate providers list from DB
+		setList();
 		return v;
+	}
+	
+	protected void setList() {
+		setListAdapter(new ProviderAdapter(getActivity(), GetProviderList(), null));
+	}
+	
+	private List<Provider> GetProviderList() {
+		db = new DB(getActivity(), null);
+		List<Provider> providerList = db.getAllProviders();
+		db.close();
+		return providerList;
 	}
 	
 	// TODO: Rename method, update argument and hook method into UI event
@@ -111,6 +132,28 @@ public class JobProviderFragment extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		mListener = null;
+	}
+	
+	@Override
+	public void onRecordSelectUpdate(int recordID, int flag) {
+		this.recordID = recordID;
+		switch (flag) {
+			case 1:
+				// DELETE RECORD
+				//showAlertDialog();
+				Toast.makeText(mContext, "DELETE PROVIDER", Toast.LENGTH_SHORT);
+				break;
+			case 2:
+				// UPDATE RECORD
+//				FragmentTransaction ft = getFragmentManager().beginTransaction();
+//				ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom);
+//				fragUpdateIncomeRecord = new UpdateSingleIncomeRecord(recordID);
+//				ft.replace(R.id.frame_container, fragUpdateIncomeRecord).commit();
+				Toast.makeText(mContext, "UPDATE PROVIDER", Toast.LENGTH_SHORT);
+			
+			default:
+				break;
+		}
 	}
 	
 	/**
@@ -140,8 +183,8 @@ public class JobProviderFragment extends Fragment {
 	public static class MyDialog extends DialogFragment {
 		
 		/* (non-Javadoc)
-		 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
-		 */
+			 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+			 */
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			Rect displayRectangle = new Rect();
@@ -165,10 +208,12 @@ public class JobProviderFragment extends Fragment {
 			btnYes.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Save provider to DB
 					// TODO validate input
-					Provider p = new Provider(txtName.toString(),"yes");
-					saveProvider(p);
+					// Save provider to DB
+					saveProvider(new Provider(txtName.getText().toString(), "yes"));
+					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					ft.setCustomAnimations(R.anim.slide_in_top, R.anim.slide_out_bottom);
+					ft.replace(R.id.main_fragment_container, new SettingsFragment()).commit();
 					alertDialogBuilder.cancel();
 				}
 			});
@@ -181,22 +226,24 @@ public class JobProviderFragment extends Fragment {
 			return alertDialogBuilder;
 		}
 	}
+	
 	// TODO Delete when ready
-	public static void showToast(String msg){
+	public static void showToast(String msg) {
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(mContext, msg, duration);
 		toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 		toast.show();
 	}
 	
-	private static void saveProvider(Provider p){
-		// TODO Save provider
-		DB db = new DB(mContext,null);
-		if(db.insertProvider(p)){
+	public static void saveProvider(Provider p) {
+		// Save provider
+		DB db = new DB(mContext, null);
+		if (db.insertProvider(p)) {
 			showToast("Provider save success");
-		}else{
+		} else {
 			showToast("Unable to save provider");
 			// TODO Save to log file
 		}
 	}
 }
+

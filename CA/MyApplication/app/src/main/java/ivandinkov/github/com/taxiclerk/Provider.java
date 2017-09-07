@@ -49,9 +49,9 @@ public class Provider {
 	 * @param active the active
 	 */
 	public Provider(String name, String active){
+		
 		this._name = name;
 		this._active = active;
-		
 	}
 	// getting ID
 	/**
@@ -61,6 +61,16 @@ public class Provider {
 	 */
 	public int getID(){
 		return this._id;
+	}
+	
+	// setting id
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the new id
+	 */
+	public void setID(int id){
+		this._id = id;
 	}
 	
 	
