@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1009570858200",
+    "firebase_url": "https://taxiclerk-acb2c.firebaseio.com",
+    "project_id": "taxiclerk-acb2c",
+    "storage_bucket": "taxiclerk-acb2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009570858200:android:8825008efccee268",
+        "android_client_info": {
+          "package_name": "ivandinkov.github.com.taxiclerk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009570858200-dbfp8enb23q7h4ha1do6n53ujov28aj7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC39UuQO3yBLQGeokbIFm1cJOSAKbN5kkc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

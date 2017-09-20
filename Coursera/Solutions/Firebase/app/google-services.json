@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "124475130659",
+    "firebase_url": "https://androidproject-df0ac.firebaseio.com",
+    "project_id": "androidproject-df0ac",
+    "storage_bucket": "androidproject-df0ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124475130659:android:5dc567cf8db1ec16",
+        "android_client_info": {
+          "package_name": "labs.course.firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124475130659-kpajlvgg31jh475e4stdk9taft5fl4rq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJUUGKj8E9-nmvAJiCKtvKPs31a-BFPqE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
