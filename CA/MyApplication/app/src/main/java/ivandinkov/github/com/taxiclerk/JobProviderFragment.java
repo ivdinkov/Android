@@ -47,6 +47,7 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	private static Context mContext;
 	private int recordID;
 	private DB db;
+	private Button btnAddProvider;
 	
 	public JobProviderFragment() {
 		// Required empty public constructor
@@ -86,7 +87,7 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 		View v = inflater.inflate(R.layout.fragment_job_provider, container, false);
 		
 		// Initialise button
-		Button btnAddProvider = (Button) v.findViewById(R.id.btnAddProvider);
+		btnAddProvider = (Button) v.findViewById(R.id.btnAddProvider);
 		btnAddProvider.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -177,7 +178,7 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	private void showDialog() {
 		FragmentManager fm = getFragmentManager();
 		MyDialog alertDialog = new MyDialog();
-		alertDialog.show(fm, "fragment_job_provider");
+		alertDialog.show(fm, "job provider");
 	}
 	
 	public static class MyDialog extends DialogFragment {
@@ -227,7 +228,6 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 		}
 	}
 	
-	// TODO Delete when ready
 	public static void showToast(String msg) {
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(mContext, msg, duration);

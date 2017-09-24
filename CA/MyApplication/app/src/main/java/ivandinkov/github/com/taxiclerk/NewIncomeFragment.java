@@ -1,10 +1,15 @@
 package ivandinkov.github.com.taxiclerk;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
@@ -12,11 +17,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
@@ -49,6 +56,7 @@ public class NewIncomeFragment extends Fragment {
 	private RadioButton radioAccount;
 	private RadioButton radioCash;
 	private String radioSelectedText;
+	private static String note;
 	
 	public NewIncomeFragment() {
 		// Required empty public constructor
@@ -165,8 +173,18 @@ public class NewIncomeFragment extends Fragment {
 			}
 		});
 		
+		/*
+		 * Get Note
+		 */
+		btnNewIncomeNote.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				showNoteDialog();
+			}
+		});
 	return view;
 	}
+	
 	
 	private DisplayMetrics getWidthAndHeightPx() {
 		DisplayMetrics dm = new DisplayMetrics();
@@ -212,4 +230,59 @@ public class NewIncomeFragment extends Fragment {
 		// TODO: Update argument type and name
 		void onFragmentInteraction(Uri uri);
 	}
+	
+	/**
+	 * Show Terms Dialog.
+	 */
+	private void showNoteDialog() {
+		FragmentManager fm = getFragmentManager();
+		NewIncomeFragment.NoteDialog alertDialog = new NewIncomeFragment.NoteDialog();
+		alertDialog.show(fm, "note");
+	}
+	
+	public static class NoteDialog extends DialogFragment {
+		
+		/* (non-Javadoc)
+			 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+			 */
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			Rect displayRectangle = new Rect();
+			Window window = getActivity().getWindow();
+			window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+			
+			LayoutInflater inflater = getActivity().getLayoutInflater();
+			final Dialog alertDialogBuilder = new Dialog(getActivity());
+			
+			View customView = inflater.inflate(R.layout.new_income_note, null);
+			
+			customView.setMinimumWidth((int) (displayRectangle.width() * 0.6f));
+			customView.setMinimumHeight((int) (displayRectangle.height() * 0.2f));
+			
+			TextView btnYes = (TextView) customView.findViewById(R.id.txtSaveNewNote);
+			TextView btnCancel = (TextView) customView.findViewById(R.id.txtCancelNewNote);
+			final EditText txtNote = (EditText) customView.findViewById(R.id.txtNote);
+			
+			alertDialogBuilder.setContentView(customView);
+			
+			btnYes.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					// TODO validate input
+					note = txtNote.getText().toString();
+					alertDialogBuilder.cancel();
+				}
+			});
+			btnCancel.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					alertDialogBuilder.cancel();
+				}
+			});
+			return alertDialogBuilder;
+		}
+	}
+	
+	
+	
 }
