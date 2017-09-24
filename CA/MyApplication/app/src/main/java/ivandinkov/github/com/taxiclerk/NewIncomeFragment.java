@@ -67,7 +67,7 @@ public class NewIncomeFragment extends Fragment {
 	private RadioButton radioCash;
 	private static String noteToBeSaved = "";
 	private String providerToBeSaved;
-	private String incomeTypeToBeSaved;
+	private String incomeTypeToBeSaved = "Account";
 	private Button btnCancelNewIncome;
 	
 	public NewIncomeFragment() {
@@ -105,7 +105,7 @@ public class NewIncomeFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		View view =  inflater.inflate(R.layout.fragment_new_income, container, false);
+		View view = inflater.inflate(R.layout.fragment_new_income, container, false);
 		
 		// Initialize view elements
 		txtNewIncomeAmount = (EditText) view.findViewById(R.id.editTextNewFareAmount);
@@ -141,28 +141,23 @@ public class NewIncomeFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// validate input
-				if(providerToBeSaved == null || incomeAmountToBeSaved == null){
+				if (providerToBeSaved == null || incomeAmountToBeSaved == null) {
 					Toast toast = Toast.makeText(getActivity(), "Incomplete details", Toast.LENGTH_LONG);
 					toast.setGravity(Gravity.TOP, 0, 0);
 					toast.show();
-				}else{
+				} else {
 					// save the new income to db
-					DB db = new DB(getActivity(),null);
-					long result = db.saveNewIncome(new Income(getDate(), incomeTypeToBeSaved, incomeAmountToBeSaved, noteToBeSaved, providerToBeSaved));
-					if(result != -1){
-						Toast toast = Toast.makeText(getActivity(), "Save fail!", Toast.LENGTH_LONG);
-						toast.setGravity(Gravity.TOP, 0, 0);
-						toast.show();
-					}else{
-						LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
-						buttonHolder.setVisibility(View.VISIBLE);
-						
-						Fragment fragment = null;
-						FragmentTransaction ft = getFragmentManager().beginTransaction();
-						fragment = new HomeFragment();
-						ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-						ft.replace(R.id.main_fragment_container, fragment, "home").commit();
-					}
+					DB db = new DB(getActivity(), null);
+					db.saveNewIncome(new Income(getDate(), incomeTypeToBeSaved, incomeAmountToBeSaved, noteToBeSaved, providerToBeSaved));
+					
+					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+					buttonHolder.setVisibility(View.VISIBLE);
+					
+					Fragment fragment = null;
+					FragmentTransaction ft = getFragmentManager().beginTransaction();
+					fragment = new HomeFragment();
+					ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+					ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 				}
 			}
 		});
@@ -259,7 +254,7 @@ public class NewIncomeFragment extends Fragment {
 				showNoteDialog();
 			}
 		});
-	return view;
+		return view;
 	}
 	
 	private String getDate() {
@@ -269,7 +264,7 @@ public class NewIncomeFragment extends Fragment {
 	}
 	
 	private ArrayList<String> getProviders() {
-		DB db = new DB(getActivity(),null);
+		DB db = new DB(getActivity(), null);
 		ArrayList<String> providers = db.getProviderNames();
 		db.close();
 		return providers;
@@ -371,7 +366,6 @@ public class NewIncomeFragment extends Fragment {
 			return alertDialogBuilder;
 		}
 	}
-	
 	
 	
 }

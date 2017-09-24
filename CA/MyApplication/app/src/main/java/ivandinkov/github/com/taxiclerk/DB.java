@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -198,8 +200,9 @@ public class DB extends SQLiteOpenHelper {
 		values.put(KEY_INC_DATE, income.getDate());
 		values.put(KEY_INC_TYPE, income.getIncType());
 		values.put(KEY_INC_AMOUNT, income.getAmount());
-		values.put(KEY_INC_NOTES, income.getNote());
 		values.put(KEY_INC_PROVIDER, income.getProvider());
+		values.put(KEY_INC_NOTES, income.getNote());
+		
 		
 		// Inserting Row
 		long result = 0;
@@ -214,17 +217,18 @@ public class DB extends SQLiteOpenHelper {
 		return result;
 	}
 	
-	public ArrayList<Income> getAllIncome(String count) {
+	public ArrayList<Income> getAllIncome() {
 		ArrayList<Income> incomeList = new ArrayList<Income>();
 		// Select All Query
-		String selectQuery = "SELECT " + KEY_ID_INCOME
+		String selectQuery = "SELECT "
+						+ KEY_ID_INCOME + ","
 						+ KEY_INC_DATE + ","
 						+ KEY_INC_TYPE + ","
 						+ KEY_INC_AMOUNT + ","
-						+ KEY_INC_NOTES + ","
-						+ KEY_INC_PROVIDER + " FROM "
+						+ KEY_INC_PROVIDER + ","
+						+  KEY_INC_NOTES + " FROM "
 						+ TABLE_INCOME + " ORDER BY "
-						+ KEY_ID_INCOME + " LIMIT " + count;
+						+ KEY_ID_INCOME;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -237,8 +241,8 @@ public class DB extends SQLiteOpenHelper {
 				inc.setDate(cursor.getString(1));
 				inc.setIncType(cursor.getString(2));
 				inc.setAmount(cursor.getString(3));
-				inc.setNote(cursor.getString(4));
-				inc.setProvider(cursor.getString(5));
+				inc.setProvider(cursor.getString(4));
+				inc.setNote(cursor.getString(5));
 				// Adding contact to list
 				incomeList.add(inc);
 			} while (cursor.moveToNext());

@@ -59,6 +59,11 @@ public class ProviderAdapter extends ArrayAdapter<Provider> {
 		public TextView provider_name;
 		public ImageButton provider_delete;
 		public ImageButton provider_edit;
+		public TextView income_id;
+		public TextView date;
+		public TextView type;
+		public TextView amount;
+		public TextView note;
 	}
 	
 	@Override
