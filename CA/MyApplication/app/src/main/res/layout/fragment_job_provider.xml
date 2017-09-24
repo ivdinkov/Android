@@ -16,9 +16,9 @@
             android:id="@android:id/list"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:divider="#777777"
-            android:dividerHeight="0.1dp"
+            android:layout_marginTop="5dp"
+            android:divider="#b3b6ce"
+            android:dividerHeight="0.5dp"
             android:scrollbars="vertical"/>
     </LinearLayout>
 

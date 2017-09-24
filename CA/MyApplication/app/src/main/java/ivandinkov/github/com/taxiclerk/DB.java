@@ -22,25 +22,42 @@ public class DB extends SQLiteOpenHelper {
 	/** Database Name */
 	/** The Constant DATABASE_NAME. */
 	private static final String DATABASE_NAME = "taxi_book_keeper";
-	/** Table names */
-	/** The Constant TABLE_PROVIDER. */
-	private static final String TABLE_PROVIDER = "provider";
 	/** The Constant TAG. */
 	private static final String TAG = "TC";
-	/** The Constant KEY_ID. */
+	
+	
+	private static final String TABLE_PROVIDER = "provider";
 	private static final String KEY_ID = "id";
-	/** The Constant KEY_NAME. */
 	private static final String KEY_PROVIDER_NAME = "name";
-	/** The Constant KEY_PR_ACTIVE*/
 	private static final String KEY_PR_ACTIVE = "active";
-	
-	
-	
-	/** Tables */
 	/** The Constant CREATE_JOB_PROVIDER_TABLE. */
 	private static final String CREATE_PROVIDER_TABLE = "CREATE TABLE IF NOT EXISTS "
-					+ TABLE_PROVIDER + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
-					+ KEY_PROVIDER_NAME + " TEXT," + KEY_PR_ACTIVE + " TEXT)";
+					+ TABLE_PROVIDER
+					+ "(" + KEY_ID + " INTEGER PRIMARY KEY,"
+					+ KEY_PROVIDER_NAME + " TEXT,"
+					+ KEY_PR_ACTIVE + " TEXT)";
+	
+	
+	private static final String TABLE_INCOME = "income";
+	private static final String KEY_ID_INCOME = "id";
+	private static final String KEY_INC_DATE = "income_date";
+	private static final String KEY_INC_TYPE = "income_type";
+	private static final String KEY_INC_AMOUNT = "income_amount";
+	private static final String KEY_INC_NOTES = "income_notes";
+	private static final String KEY_INC_PROVIDER = "income_provider";
+	/** The Constant CREATE_INCOME_TABLE. */
+	private static final String CREATE_INCOME_TABLE = "CREATE TABLE IF NOT EXISTS "
+					+ TABLE_INCOME
+					+ "(" + KEY_ID_INCOME + " INTEGER PRIMARY KEY,"
+					+ KEY_INC_DATE + " TEXT,"
+					+ KEY_INC_TYPE + " TEXT,"
+					+ KEY_INC_AMOUNT + " TEXT,"
+					+ KEY_INC_NOTES + " TEXT,"
+					+ KEY_INC_PROVIDER + " TEXT)";
+	
+	
+	
+	
 	
 	public DB(Context context, SQLiteDatabase.CursorFactory factory) {
 		super(context, DATABASE_NAME, factory, DATABASE_VERSION);
@@ -52,7 +69,7 @@ public class DB extends SQLiteOpenHelper {
 			db.execSQL(CREATE_PROVIDER_TABLE);
 //			db.execSQL(CREATE_TRIAL_TABLE);
 //			db.execSQL(CREATE_EXPENSE_TABLE);
-//			db.execSQL(CREATE_INCOME_TABLE);
+			db.execSQL(CREATE_INCOME_TABLE);
 //			db.execSQL(CREATE_HOURS_TABLE);
 //			db.execSQL(CREATE_JOB_PROVIDER_TABLE);
 		} catch (Exception e) {
@@ -66,7 +83,7 @@ public class DB extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROVIDER);
 //			db.execSQL("DROP TABLE IF EXISTS" + TABLE_TRIAL);
 //			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
-//			db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
 //			db.execSQL("DROP TABLE IF EXISTS " + TABLE_HOURS);
 //			db.execSQL("DROP TABLE IF EXISTS " + TABLE_JOB_PROVIDER);
 		} catch (Exception e) {
@@ -102,14 +119,14 @@ public class DB extends SQLiteOpenHelper {
 		}
 		return false;
 	}
-	/** Get All Providers */
+	/** Get All Provider*/
 	/**
-	 * Gets the all providers.
+	 * Gets provider names.
 	 *
 	 * @return the all providers
 	 */
-	public List<Provider> getAllProviders() {
-		List<Provider> provList = new ArrayList<Provider>();
+	public ArrayList<Provider> getAllProviders() {
+		ArrayList<Provider> provList = new ArrayList<Provider>();
 		
 		// Select All Query
 		String selectQuery = "SELECT * FROM " + TABLE_PROVIDER + " WHERE " + KEY_PR_ACTIVE + " LIKE 'yes'";
@@ -139,6 +156,62 @@ public class DB extends SQLiteOpenHelper {
 		
 		db.close();
 		return provList;
+	}
+	
+	/** Get All Provider Names*/
+	/**
+	 * Gets provider names.
+	 *
+	 * @return the all providers
+	 */
+	public ArrayList<String> getProviderNames() {
+		ArrayList<String> provList = new ArrayList<String>();
+		
+		// Select All Query
+		String selectQuery = "SELECT " + KEY_PROVIDER_NAME + " FROM " + TABLE_PROVIDER + " WHERE " + KEY_PR_ACTIVE + " LIKE 'yes'";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				// Adding names to list
+				provList.add(cursor.getString(0));
+			} while (cursor.moveToNext());
+		}
+		
+		db.close();
+		return provList;
+	}
+	
+	/**
+	 *
+	 * Income
+	 *
+	 */
+	public long saveNewIncome(Income income) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.clear();
+		values.put(KEY_INC_DATE, income.getDate());
+		values.put(KEY_INC_TYPE, income.getIncType());
+		values.put(KEY_INC_AMOUNT, income.getAmount());
+		values.put(KEY_INC_NOTES, income.getNote());
+		values.put(KEY_INC_PROVIDER, income.getProvider());
+		
+		// Inserting Row
+		long result = 0;
+		try {
+			result = db.insert(TABLE_INCOME, null, values);
+		} catch (Exception e) {
+			Log.e("APP", "exception", e);
+		}
+		
+		// Closing database connection
+		db.close();
+		return result;
 	}
 	
 }

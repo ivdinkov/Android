@@ -1,7 +1,9 @@
 package ivandinkov.github.com.taxiclerk;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -10,22 +12,30 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 
 /**
@@ -55,8 +65,10 @@ public class NewIncomeFragment extends Fragment {
 	private Button btnSaveNewIncome;
 	private RadioButton radioAccount;
 	private RadioButton radioCash;
-	private String radioSelectedText;
-	private static String note;
+	private static String noteToBeSaved = "";
+	private String providerToBeSaved;
+	private String incomeTypeToBeSaved;
+	private Button btnCancelNewIncome;
 	
 	public NewIncomeFragment() {
 		// Required empty public constructor
@@ -102,6 +114,7 @@ public class NewIncomeFragment extends Fragment {
 		btnSaveNewIncome = (Button) view.findViewById(R.id.btnSaveNewIncome);
 		radioCash = (RadioButton) view.findViewById(R.id.cashNewIncome);
 		radioAccount = (RadioButton) view.findViewById(R.id.accNewIncome);
+		btnCancelNewIncome = (Button) view.findViewById(R.id.btnCancelNewIncome);
 		
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newIncomeLayoutWraper);
 		// Get device dimensions
@@ -111,19 +124,83 @@ public class NewIncomeFragment extends Fragment {
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		
+		
+		btnCancelNewIncome.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+				buttonHolder.setVisibility(View.VISIBLE);
+				Fragment fragment = null;
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				fragment = new HomeFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
+			}
+		});
+		btnSaveNewIncome.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// validate input
+				if(providerToBeSaved == null || incomeAmountToBeSaved == null){
+					Toast toast = Toast.makeText(getActivity(), "Incomplete details", Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.TOP, 0, 0);
+					toast.show();
+				}else{
+					// save the new income to db
+					DB db = new DB(getActivity(),null);
+					long result = db.saveNewIncome(new Income(getDate(), incomeTypeToBeSaved, incomeAmountToBeSaved, noteToBeSaved, providerToBeSaved));
+					if(result != -1){
+						Toast toast = Toast.makeText(getActivity(), "Save fail!", Toast.LENGTH_LONG);
+						toast.setGravity(Gravity.TOP, 0, 0);
+						toast.show();
+					}else{
+						LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+						buttonHolder.setVisibility(View.VISIBLE);
+						
+						Fragment fragment = null;
+						FragmentTransaction ft = getFragmentManager().beginTransaction();
+						fragment = new HomeFragment();
+						ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+						ft.replace(R.id.main_fragment_container, fragment, "home").commit();
+					}
+				}
+			}
+		});
+		/*
+		 * Get provider
+		 */
+		btnSelectProvider.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				final ArrayList<String> providers = getProviders();
+				
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, providers);
+				new AlertDialog.Builder(getActivity()).setTitle("Select provider").setAdapter(adapter, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// btnSpinner.setBackgroundResource(R.drawable.edittext_login_box_border);
+						btnSelectProvider.setText(providers.get(which).toString());
+						providerToBeSaved = providers.get(which).toString();
+						dialog.dismiss();
+					}
+				}).create().show();
+			}
+		});
+
 		/*
 		 * Get selected Radio
 		 */
 		radioCash.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				radioSelectedText = (String) radioCash.getText();
+				incomeTypeToBeSaved = (String) radioCash.getText();
 			}
 		});
 		radioAccount.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				radioSelectedText = (String) radioAccount.getText();
+				incomeTypeToBeSaved = (String) radioAccount.getText();
 			}
 		});
 
@@ -185,6 +262,18 @@ public class NewIncomeFragment extends Fragment {
 	return view;
 	}
 	
+	private String getDate() {
+		DateFormat df = new SimpleDateFormat("dd MM yyyy, HH:mm");
+		String date = df.format(Calendar.getInstance().getTime());
+		return date;
+	}
+	
+	private ArrayList<String> getProviders() {
+		DB db = new DB(getActivity(),null);
+		ArrayList<String> providers = db.getProviderNames();
+		db.close();
+		return providers;
+	}
 	
 	private DisplayMetrics getWidthAndHeightPx() {
 		DisplayMetrics dm = new DisplayMetrics();
@@ -232,7 +321,7 @@ public class NewIncomeFragment extends Fragment {
 	}
 	
 	/**
-	 * Show Terms Dialog.
+	 * Show Note Dialog.
 	 */
 	private void showNoteDialog() {
 		FragmentManager fm = getFragmentManager();
@@ -269,7 +358,7 @@ public class NewIncomeFragment extends Fragment {
 				@Override
 				public void onClick(View v) {
 					// TODO validate input
-					note = txtNote.getText().toString();
+					noteToBeSaved = txtNote.getText().toString();
 					alertDialogBuilder.cancel();
 				}
 			});

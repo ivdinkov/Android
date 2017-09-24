@@ -95,14 +95,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="100">
 
             <Button
                 android:id="@+id/btnSaveNewIncome"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginTop="@dimen/trezerodp"
+                android:layout_marginEnd="@dimen/fivedp"
+                android:layout_weight="50"
                 android:text="Save"/>
+
+            <Button
+                android:id="@+id/btnCancelNewIncome"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginTop="@dimen/trezerodp"
+                android:layout_marginLeft="@dimen/fivedp"
+                android:layout_weight="50"
+                android:text="Cancel"/>
 
         </LinearLayout>
 
