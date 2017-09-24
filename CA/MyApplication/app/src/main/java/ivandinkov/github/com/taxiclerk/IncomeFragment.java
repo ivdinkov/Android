@@ -4,9 +4,12 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 
 /**
@@ -28,6 +31,7 @@ public class IncomeFragment extends Fragment {
 	private String mParam2;
 	
 	private OnFragmentInteractionListener mListener;
+	private DisplayMetrics dm;
 	
 	public IncomeFragment() {
 		// Required empty public constructor
@@ -58,13 +62,36 @@ public class IncomeFragment extends Fragment {
 			mParam1 = getArguments().getString(ARG_PARAM1);
 			mParam2 = getArguments().getString(ARG_PARAM2);
 		}
+		
+		
+	}
+	
+	/**
+	 * Method for getting device screen metrics
+	 *
+	 * @return DisplayMetrics
+	 */
+	public DisplayMetrics getWidthAndHeightPx() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm;
 	}
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_income, container, false);
+		View view = inflater.inflate(R.layout.fragment_income, container, false);
+		
+		LinearLayout incomeLayoutWraper = (LinearLayout) view.findViewById(R.id.incomeLayoutWraper);
+		// Get device dimensions
+		dm = getWidthAndHeightPx();
+		// Set register layout holder to 80% width
+		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) incomeLayoutWraper.getLayoutParams();
+		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		
+		return view;
 	}
 	
 	// TODO: Rename method, update argument and hook method into UI event

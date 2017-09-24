@@ -17,12 +17,14 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
 	Button btnRegister;
 	private ProgressDialog progressDialog;
 	private FirebaseAuth firebaseAuth;
+	private TextView textViewLogin;
+	private LinearLayout lnrViewSlide;
 	
 	
 	@Override
@@ -61,14 +65,40 @@ public class RegisterActivity extends AppCompatActivity {
 		txtPassword = (EditText) findViewById(R.id.txtPassword);
 		txtSign = (TextView) findViewById(R.id.txtViewSign);
 		btnRegister = (Button) findViewById(R.id.btnRegister);
+		textViewLogin = (TextView) findViewById(R.id.txtViewSign);
+		lnrViewSlide = (LinearLayout) findViewById(R.id.register_slide);
 		
-		
+		// Get device dimensions
 		dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
 		LinearLayout.LayoutParams lpWrapper = (LinearLayout.LayoutParams) registerLayoutWrapper.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		
+		txtPassword.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+				lnrViewSlide.setLayoutParams(layoutParams1);
+				return false;
+			}
+		});
+		txtEmail.setOnTouchListener(new View.OnTouchListener() {
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,2f);
+				lnrViewSlide.setLayoutParams(layoutParams1);
+				return false;
+			}
+		});
+		
+		textViewLogin.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+				finish();
+			}
+		});
 		txtTerms.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -158,7 +188,6 @@ public class RegisterActivity extends AppCompatActivity {
 	
 	private void registerUser() {
 		
-		
 		// Reset errors.
 		txtEmail.setError(null);
 		txtPassword.setError(null);
@@ -180,7 +209,6 @@ public class RegisterActivity extends AppCompatActivity {
 			txtPassword.setError(getString(R.string.error_invalid_password));
 			focusView = txtPassword;
 			cancel = true;
-			
 		}
 		
 		// Check for a valid email address.
@@ -222,8 +250,8 @@ public class RegisterActivity extends AppCompatActivity {
 										Toast toast = Toast.makeText(RegisterActivity.this, "Registration success!", Toast.LENGTH_LONG);
 										toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 										toast.show();
-										startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
 										finish();
+										startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
 									} else {
 										progressDialog.dismiss();
 										Toast toast = Toast.makeText(RegisterActivity.this, "Registration fail!", Toast.LENGTH_LONG);

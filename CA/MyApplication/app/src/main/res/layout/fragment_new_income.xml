@@ -2,11 +2,10 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context="ivandinkov.github.com.taxiclerk.IncomeFragment">
-
+             tools:context="ivandinkov.github.com.taxiclerk.NewIncomeFragment">
 
     <LinearLayout
-        android:id="@+id/incomeLayoutWraper"
+        android:id="@+id/newIncomeLayoutWraper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -17,4 +16,5 @@
             android:layout_height="wrap_content"
             android:text="TextView"/>
     </LinearLayout>
+
 </FrameLayout>

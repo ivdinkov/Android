@@ -8,6 +8,7 @@
     tools:context="ivandinkov.github.com.taxiclerk.RegisterActivity">
 
     <LinearLayout
+        android:id="@+id/register_slide"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="20"
@@ -41,6 +42,7 @@
         android:layout_height="0dp"
         android:layout_weight="45"
         android:baselineAligned="false"
+        android:gravity="center"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
@@ -75,12 +77,6 @@
                 />
 
         </android.support.design.widget.TextInputLayout>
-        <TextView
-            android:id="@+id/txtViewSign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:textSize="16sp"/>
 
 
         <LinearLayout
@@ -120,6 +116,14 @@
             android:gravity="center"
             android:text="@string/btn_register_text"
             android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/txtViewSign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:text="@string/im_registerd"
+            android:textSize="18dp"/>
 
     </LinearLayout>
 </LinearLayout>

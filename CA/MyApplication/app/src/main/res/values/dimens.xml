@@ -6,10 +6,11 @@
     <dimen name="nav_header_height">160dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="register_title_text_size">40dp</dimen>
-    <dimen name="register_layout_margin">30dp</dimen>
+    <dimen name="register_layout_margin">5dp</dimen>
     <dimen name="register_button_radius">5dp</dimen>
     <dimen name="fivedp">5dp</dimen>
     <dimen name="btn_job_exp">50dp</dimen>
     <dimen name="trezerodp">30dp</dimen>
+    <dimen name="ten_dp">10dp</dimen>
 
 </resources>

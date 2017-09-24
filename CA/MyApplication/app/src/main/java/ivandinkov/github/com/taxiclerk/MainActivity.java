@@ -1,11 +1,13 @@
 package ivandinkov.github.com.taxiclerk;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +20,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 public class MainActivity extends AppCompatActivity
 				implements NavigationView.OnNavigationItemSelectedListener,
 				HomeFragment.OnFragmentInteractionListener,
@@ -28,19 +33,32 @@ public class MainActivity extends AppCompatActivity
 				ExpenseFragment.OnFragmentInteractionListener,
 				ReportFragment.OnFragmentInteractionListener,
 				SettingsFragment.OnFragmentInteractionListener,
-				NewFareFragment.OnFragmentInteractionListener,
+				NewIncomeFragment.OnFragmentInteractionListener,
 				NewExpenseFragment.OnFragmentInteractionListener,
 				JobProviderFragment.OnFragmentInteractionListener
 
 {
+	private static final String TAG = "TC";
 	LinearLayout btnHolder;
 	boolean isFirstTime = true;
+	private FirebaseAuth firebaseAuth;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
+		
+		firebaseAuth = FirebaseAuth.getInstance();
+		//		FirebaseUser user = firebaseAuth.getCurrentUser();
+//		if(user != null){
+//			Log.i(TAG,"User signed in");
+//			startActivity(new Intent(LoginActivity.this,MainActivity.class));
+//		}else{
+//			Log.i(TAG,"User signed out");
+//		}
+		
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,14 +81,28 @@ public class MainActivity extends AppCompatActivity
 		btnAddFare.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				displayView(6);
+				Fragment fragment = null;
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				// Hide buttons to make space for new income fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show Settings
+				fragment = new NewIncomeFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "new fare").commit();
 			}
 		});
 		Button btnAddExpense = (Button) findViewById(R.id.new_expense);
 		btnAddExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				displayView(7);
+				Fragment fragment = null;
+				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				// Hide buttons to make space for new expense fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show Settings
+				fragment = new NewExpenseFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "new expense").commit();
 			}
 		});
 		
@@ -123,22 +155,8 @@ public class MainActivity extends AppCompatActivity
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 6:
-				fragment = new NewFareFragment();
-				ft.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-				ft.replace(R.id.main_fragment_container, fragment, "new fare").commit();
-				break;
-			case 7:
-				fragment = new NewExpenseFragment();
-				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-				ft.replace(R.id.main_fragment_container, fragment, "new expense").commit();
-				break;
-			
-			case 8:
-				// Exit App
-				SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-				editor.putString("logged", "no");
-				editor.apply();
-				finish();
+				// Sign Out App
+				firebaseAuth.signOut();
 				break;
 			
 			default:
@@ -150,18 +168,11 @@ public class MainActivity extends AppCompatActivity
 			fragmentManager.beginTransaction().replace(R.id.main_fragment_container,
 							fragment).commit();
 			
-			// update selected item and title, then close the drawer
-//			mDrawerList.setItemChecked(position, true);
-//			mDrawerList.setSelection(position);
-//			setTitle(navMenuTitles[position]);
-//			mDrawerLayout.closeDrawer(mDrawerList);
-//			// save win title
-			
 		} else {
 			finish();
+			startActivity(new Intent(MainActivity.this,LoginActivity.class));
 		}
 	}
-	
 	@Override
 	public void onBackPressed() {
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -172,7 +183,6 @@ public class MainActivity extends AppCompatActivity
 			displayView(1);
 			// Show buttons
 			btnHolder.setVisibility(View.VISIBLE);
-			//super.onBackPressed();
 		}
 	}
 	
@@ -232,4 +242,5 @@ public class MainActivity extends AppCompatActivity
 	public void onFragmentInteraction(Uri uri) {
 		
 	}
+	
 }

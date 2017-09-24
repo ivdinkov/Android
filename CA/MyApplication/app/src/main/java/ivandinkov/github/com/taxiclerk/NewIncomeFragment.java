@@ -4,20 +4,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link NewFareFragment.OnFragmentInteractionListener} interface
+ * {@link NewIncomeFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link NewFareFragment#newInstance} factory method to
+ * Use the {@link NewIncomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewFareFragment extends Fragment {
+public class NewIncomeFragment extends Fragment {
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -28,8 +31,9 @@ public class NewFareFragment extends Fragment {
 	private String mParam2;
 	
 	private OnFragmentInteractionListener mListener;
+	private DisplayMetrics dm;
 	
-	public NewFareFragment() {
+	public NewIncomeFragment() {
 		// Required empty public constructor
 	}
 	
@@ -39,11 +43,11 @@ public class NewFareFragment extends Fragment {
 	 *
 	 * @param param1 Parameter 1.
 	 * @param param2 Parameter 2.
-	 * @return A new instance of fragment NewFareFragment.
+	 * @return A new instance of fragment NewIncomeFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
-	public static NewFareFragment newInstance(String param1, String param2) {
-		NewFareFragment fragment = new NewFareFragment();
+	public static NewIncomeFragment newInstance(String param1, String param2) {
+		NewIncomeFragment fragment = new NewIncomeFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_PARAM1, param1);
 		args.putString(ARG_PARAM2, param2);
@@ -64,7 +68,24 @@ public class NewFareFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_new_fare, container, false);
+		View view =  inflater.inflate(R.layout.fragment_new_income, container, false);
+		
+		
+		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newIncomeLayoutWraper);
+		// Get device dimensions
+		dm = getWidthAndHeightPx();
+		// Set register layout holder to 80% width
+		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
+		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		
+	return view;
+	}
+	
+	private DisplayMetrics getWidthAndHeightPx() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm;
 	}
 	
 	// TODO: Rename method, update argument and hook method into UI event
