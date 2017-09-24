@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="60"
                 android:padding="@dimen/ten_dp"
-                android:text="Note"
+                android:text=""
                 android:textSize="15sp"/>
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_weight="40"
                 android:gravity="end"
                 android:padding="@dimen/ten_dp"
-                android:text="Amount"
+                android:text=""
                 android:textSize="35sp"/>
 
         </LinearLayout>
