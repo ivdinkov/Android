@@ -214,4 +214,38 @@ public class DB extends SQLiteOpenHelper {
 		return result;
 	}
 	
+	public ArrayList<Income> getAllIncome(String count) {
+		ArrayList<Income> incomeList = new ArrayList<Income>();
+		// Select All Query
+		String selectQuery = "SELECT " + KEY_ID_INCOME
+						+ KEY_INC_DATE + ","
+						+ KEY_INC_TYPE + ","
+						+ KEY_INC_AMOUNT + ","
+						+ KEY_INC_NOTES + ","
+						+ KEY_INC_PROVIDER + " FROM "
+						+ TABLE_INCOME + " ORDER BY "
+						+ KEY_ID_INCOME + " LIMIT " + count;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				Income inc = new Income();
+				inc.setID(Integer.parseInt(cursor.getString(0)));
+				inc.setDate(cursor.getString(1));
+				inc.setIncType(cursor.getString(2));
+				inc.setAmount(cursor.getString(3));
+				inc.setNote(cursor.getString(4));
+				inc.setProvider(cursor.getString(5));
+				// Adding contact to list
+				incomeList.add(inc);
+			} while (cursor.moveToNext());
+		}
+		db.close();
+		// return income list
+		return incomeList;
+	}
+	
 }

@@ -8,8 +8,12 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -91,10 +95,26 @@ public class IncomeFragment extends Fragment {
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		
+		// create an array of Strings
+		ArrayAdapter<Income> adapter = new IncomeAdapter(getActivity(), getModel(), this);
+		setListAdapter(adapter);
+		
 		return view;
 	}
 	
-	// TODO: Rename method, update argument and hook method into UI event
+	private ArrayList<Income> getModel() {
+		DB db = new DB(getActivity(), null);
+		ArrayList<Income> incomeList = new ArrayList<Income>();
+		ArrayList<Income> list = new ArrayList<Income>();
+		incomeList = db.getAllIncome("10");
+		
+		for (Income cn : incomeList) {
+			list.add(new Income(Integer.valueOf(cn.getID()), cn.getDate(), cn.getIncType(), cn.getAmount(), cn.getNote(), cn.getProvider()));
+		}
+		db.close();
+		return list;
+	}
+	
 	public void onButtonPressed(Uri uri) {
 		if (mListener != null) {
 			mListener.onFragmentInteraction(uri);
@@ -129,7 +149,6 @@ public class IncomeFragment extends Fragment {
 	 * >Communicating with Other Fragments</a> for more information.
 	 */
 	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
 		void onFragmentInteraction(Uri uri);
 	}
 }
