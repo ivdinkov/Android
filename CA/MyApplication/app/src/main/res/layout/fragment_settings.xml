@@ -9,11 +9,22 @@
     <TextView
         android:id="@+id/txtSetJobProv"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/trezerodp"
+        android:layout_height="@dimen/btn_job_exp"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:padding="5dp"
+        android:textSize="25sp"
         android:text="Set Job provider"
+        android:textColor="#151515"/>
+    <TextView
+        android:id="@+id/txtSetExpense"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/btn_job_exp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:textSize="25sp"
+        android:text="Set Expense"
         android:textColor="#151515"/>
 
 </LinearLayout>

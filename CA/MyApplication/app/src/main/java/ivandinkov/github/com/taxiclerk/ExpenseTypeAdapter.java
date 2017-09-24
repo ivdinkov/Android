@@ -1,23 +1,20 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
 
 /**
- * Created by iv on 07/09/2017.
+ * Created by iv on 24/09/2017.
  */
 
-public class ProviderAdapter extends ArrayAdapter<Provider> {
-	
+public class ExpenseTypeAdapter extends ArrayAdapter<Expense> {
 	private final Activity mContext;
-	private final List<Provider> mList;
+	private final List<Expense> mList;
 	private final UpdateRecord mUpdateCallback;
 	
 	/**
@@ -27,18 +24,13 @@ public class ProviderAdapter extends ArrayAdapter<Provider> {
 	 * @param list the list
 	 * @param updateCallback the update callback
 	 */
-	public ProviderAdapter(Activity context, List<Provider> list, UpdateRecord updateCallback) {
+	public ExpenseTypeAdapter(Activity context, List<Expense> list, ExpenseTypeAdapter.UpdateRecord updateCallback) {
 		super(context, R.layout.list_view_provider, list);
 		this.mContext = context;
 		this.mList = list;
 		this.mUpdateCallback = updateCallback;
 	}
 	
-	
-	
-	/**
-	 * The Interface UpdateRecord.
-	 */
 	public interface UpdateRecord {
 		/**
 		 * On record select update.
@@ -48,15 +40,13 @@ public class ProviderAdapter extends ArrayAdapter<Provider> {
 		 */
 		public void onRecordSelectUpdate(int recordID, int flag);
 	}
-	
 	/**
 	 * The Class ViewHolder.
 	 */
 	static class ViewHolder {
 		/** The provider. */
-		protected TextView provider;
-		public TextView provider_id;
-		public TextView provider_name;
+		public TextView expense_type_id;
+		public TextView expense_type_name;
 	}
 	
 	@Override
@@ -64,18 +54,18 @@ public class ProviderAdapter extends ArrayAdapter<Provider> {
 		
 		View view = null;
 		if (convertView == null) {
-				view = mContext.getLayoutInflater().inflate(R.layout.list_view_provider, null);
-				final ViewHolder viewHolder = new ViewHolder();
-				viewHolder.provider_id = (TextView) view.findViewById(R.id.provider_id);
-				viewHolder.provider_name = (TextView) view.findViewById(R.id.provider_name);
-				
-				view.setTag(viewHolder);
+			view = mContext.getLayoutInflater().inflate(R.layout.list_view_expense_type, null);
+			final ExpenseTypeAdapter.ViewHolder viewHolder = new ExpenseTypeAdapter.ViewHolder();
+			viewHolder.expense_type_id = (TextView) view.findViewById(R.id.expense_type_id);
+			viewHolder.expense_type_name = (TextView) view.findViewById(R.id.expense_type_name);
+			
+			view.setTag(viewHolder);
 		} else {
 			view = convertView;
 		}
-		ViewHolder holder = (ViewHolder) view.getTag();
-		holder.provider_id.setText(String.valueOf(mList.get(position).getID()));
-		holder.provider_name.setText(mList.get(position).getName());
+		ExpenseTypeAdapter.ViewHolder holder = (ExpenseTypeAdapter.ViewHolder) view.getTag();
+		holder.expense_type_id.setText(String.valueOf(mList.get(position).getID()));
+		holder.expense_type_name.setText(mList.get(position).getName());
 		return view;
 	}
 }

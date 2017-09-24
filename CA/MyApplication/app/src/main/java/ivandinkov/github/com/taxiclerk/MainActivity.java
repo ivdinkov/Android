@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity
 				SettingsFragment.OnFragmentInteractionListener,
 				NewIncomeFragment.OnFragmentInteractionListener,
 				NewExpenseFragment.OnFragmentInteractionListener,
-				JobProviderFragment.OnFragmentInteractionListener
+				JobProviderFragment.OnFragmentInteractionListener,
+				ExpenseAddFragment.OnFragmentInteractionListener
 
 {
 	private static final String TAG = "TC";

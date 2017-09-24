@@ -40,6 +40,20 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_PR_ACTIVE + " TEXT)";
 	
 	
+	
+	private static final String TABLE_EXPENSE_TYPE = "expense_type";
+	private static final String KEY_ID_EXPENSE_TYPE = "id";
+	private static final String KEY_EXPENSE_TYPE_NAME = "expense_type_name";
+	private static final String KEY_EXPENSE_TYPE_ACTIVE = "active";
+	/** The Constant CREATE_EXPENSE_TYPE_TABLE. */
+	private static final String CREATE_EXPENSE_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS "
+					+ TABLE_EXPENSE_TYPE
+					+ "(" + KEY_ID_EXPENSE_TYPE + " INTEGER PRIMARY KEY,"
+					+ KEY_EXPENSE_TYPE_NAME + " TEXT,"
+					+ KEY_EXPENSE_TYPE_ACTIVE + " TEXT)";
+	
+	
+	
 	private static final String TABLE_INCOME = "income";
 	private static final String KEY_ID_INCOME = "id";
 	private static final String KEY_INC_DATE = "income_date";
@@ -69,6 +83,7 @@ public class DB extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		try {
 			db.execSQL(CREATE_PROVIDER_TABLE);
+			db.execSQL(CREATE_EXPENSE_TYPE_TABLE);
 //			db.execSQL(CREATE_TRIAL_TABLE);
 //			db.execSQL(CREATE_EXPENSE_TABLE);
 			db.execSQL(CREATE_INCOME_TABLE);
@@ -83,6 +98,7 @@ public class DB extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		try {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROVIDER);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE_TYPE);
 //			db.execSQL("DROP TABLE IF EXISTS" + TABLE_TRIAL);
 //			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
@@ -123,8 +139,7 @@ public class DB extends SQLiteOpenHelper {
 	}
 	/** Get All Provider*/
 	/**
-	 * Gets provider names.
-	 *
+	 * Gets provider names.	 *
 	 * @return the all providers
 	 */
 	public ArrayList<Provider> getAllProviders() {
@@ -186,6 +201,99 @@ public class DB extends SQLiteOpenHelper {
 		db.close();
 		return provList;
 	}
+	
+	/**
+	 *
+	 *  EXPENSE TYPES
+	 *
+	 */
+	/** Save provider*/
+	public boolean insertExpenseType(Expense expense){
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.put(KEY_EXPENSE_TYPE_NAME, expense.getName());
+		values.put(KEY_EXPENSE_TYPE_ACTIVE, expense.getActive());
+		
+		try {
+			/** Inserting Row */
+			long success = db.insert(TABLE_EXPENSE_TYPE, null, values);
+			/**  Close connection */
+			db.close();
+			if(success != -1){
+				return true;
+			}
+		}catch(Exception e){
+			Log.i(TAG,e.toString());
+		}
+		return false;
+	}
+	/** Get All Provider*/
+	/**
+	 * Gets provider names.
+	 *
+	 * @return the all providers
+	 */
+	public ArrayList<Expense> GetExpenseTypeList() {
+		ArrayList<Expense> expList = new ArrayList<>();
+		
+		// Select All Query
+		String selectQuery = "SELECT * FROM " + TABLE_EXPENSE_TYPE + " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			
+			do {
+				Expense exp = new Expense();
+				
+				exp.setID(Integer.parseInt(cursor.getString(0)));
+				Log.i(TAG,cursor.getString(0));
+				
+				exp.setName(cursor.getString(1));
+				Log.i(TAG,cursor.getString(1));
+				
+				exp.setActive(cursor.getString(2));
+				Log.i(TAG,cursor.getString(2));
+				
+				// Adding contact to list
+				expList.add(exp);
+			} while (cursor.moveToNext());
+		}
+		
+		db.close();
+		return expList;
+	}
+	
+	/** Get All Expense Names*/
+	/**
+	 * Gets provider names.
+	 *
+	 * @return the all providers
+	 */
+	public ArrayList<String> getAllExpenseTypesNames() {
+		ArrayList<String> expList = new ArrayList<String>();
+		
+		// Select All Query
+		String selectQuery = "SELECT " + KEY_EXPENSE_TYPE_NAME + " FROM " + TABLE_EXPENSE_TYPE + " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				// Adding names to list
+				expList.add(cursor.getString(0));
+			} while (cursor.moveToNext());
+		}
+		
+		db.close();
+		return expList;
+	}
+	
 	
 	/**
 	 *

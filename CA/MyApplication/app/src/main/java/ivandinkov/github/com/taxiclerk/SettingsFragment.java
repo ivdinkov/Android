@@ -72,6 +72,11 @@ public class SettingsFragment extends Fragment {
 		
 		// Set text view to call new Provider Fragment
 		TextView setJobProvider = (TextView) v.findViewById(R.id.txtSetJobProv);
+		TextView setExpense = (TextView) v.findViewById(R.id.txtSetExpense);
+		
+		
+		
+		
 		setJobProvider.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -81,6 +86,16 @@ public class SettingsFragment extends Fragment {
 				ft.replace(R.id.main_fragment_container, fragment, "job provider").commit();
 			}
 		});
+		setExpense.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FragmentTransaction ft = getFragmentManager().beginTransaction();
+				Fragment fragment = new ExpenseAddFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "job provider").commit();
+			}
+		});
+		
 		
 		return v;
 	}

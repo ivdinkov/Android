@@ -42,6 +42,22 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 		//this.updateCallback = updateCallback;
 	}
 	
+	
+	/**
+	 * The Class ViewHolder.
+	 */
+	static class ViewHolder {
+		/** The provider. */
+		protected TextView income;
+		public TextView income_id;
+		public TextView income_date;
+		public TextView income_type;
+		public TextView income_amount;
+		public TextView income_provider;
+		public TextView income_note;
+	}
+	
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
@@ -54,13 +70,13 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 			} else {
 				
 				view = inflator.inflate(R.layout.single_income_record, null);
-				final ProviderAdapter.ViewHolder viewHolder = new ProviderAdapter.ViewHolder();
+				final IncomeAdapter.ViewHolder viewHolder = new IncomeAdapter.ViewHolder();
 				viewHolder.income_id = (TextView) view.findViewById(R.id.income_id);
-				viewHolder.date = (TextView) view.findViewById(R.id.textViewDate);
-				viewHolder.type = (TextView) view.findViewById(R.id.textViewPaymentType);
-				viewHolder.amount = (TextView) view.findViewById(R.id.textViewAmount);
-				viewHolder.provider = (TextView) view.findViewById(R.id.textViewProviderName);
-				viewHolder.note = (TextView) view.findViewById(R.id.textViewNote);
+				viewHolder.income_date = (TextView) view.findViewById(R.id.textViewDate);
+				viewHolder.income_type = (TextView) view.findViewById(R.id.textViewPaymentType);
+				viewHolder.income_amount = (TextView) view.findViewById(R.id.textViewAmount);
+				viewHolder.income_provider = (TextView) view.findViewById(R.id.textViewProviderName);
+				viewHolder.income_note = (TextView) view.findViewById(R.id.textViewNote);
 //				viewHolder.btnEdit = (ImageButton) view.findViewById(R.id.btnIncomeEdit);
 //				viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
 ////
@@ -99,14 +115,13 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 		} else {
 			view = convertView;
 		}
-		ProviderAdapter.ViewHolder holder = (ProviderAdapter.ViewHolder) view.getTag();
-		
+		ViewHolder holder = (ViewHolder) view.getTag();
 		holder.income_id.setText(String.valueOf(list.get(position).getID()));
-		holder.date.setText(list.get(position).getDate());
-		holder.type.setText(list.get(position).getIncType());
-		holder.amount.setText(list.get(position).getAmount());
-		holder.provider.setText(list.get(position).getNote());
-		holder.note.setText(list.get(position).getProvider());
+		holder.income_date.setText(list.get(position).getDate());
+		holder.income_type.setText(list.get(position).getIncType());
+		holder.income_amount.setText(list.get(position).getAmount());
+		holder.income_provider.setText(list.get(position).getNote());
+		holder.income_note.setText(list.get(position).getProvider());
 		
 		return view;
 	}
