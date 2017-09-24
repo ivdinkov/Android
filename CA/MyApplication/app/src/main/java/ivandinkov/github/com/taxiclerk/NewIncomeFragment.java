@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 
 import java.text.DecimalFormat;
 
@@ -40,7 +42,13 @@ public class NewIncomeFragment extends Fragment {
 	private OnFragmentInteractionListener mListener;
 	private DisplayMetrics dm;
 	private EditText txtNewIncomeAmount;
-	private String incomeAmountToBeSaved = null;
+	private String incomeAmountToBeSaved;
+	private Button btnNewIncomeNote;
+	private Button btnSelectProvider;
+	private Button btnSaveNewIncome;
+	private RadioButton radioAccount;
+	private RadioButton radioCash;
+	private String radioSelectedText;
 	
 	public NewIncomeFragment() {
 		// Required empty public constructor
@@ -81,6 +89,12 @@ public class NewIncomeFragment extends Fragment {
 		
 		// Initialize view elements
 		txtNewIncomeAmount = (EditText) view.findViewById(R.id.editTextNewFareAmount);
+		btnNewIncomeNote = (Button) view.findViewById(R.id.btnNoteNewIncome);
+		btnSelectProvider = (Button) view.findViewById(R.id.btnProviderPicker);
+		btnSaveNewIncome = (Button) view.findViewById(R.id.btnSaveNewIncome);
+		radioCash = (RadioButton) view.findViewById(R.id.cashNewIncome);
+		radioAccount = (RadioButton) view.findViewById(R.id.accNewIncome);
+		
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newIncomeLayoutWraper);
 		// Get device dimensions
 		dm = getWidthAndHeightPx();
@@ -89,6 +103,22 @@ public class NewIncomeFragment extends Fragment {
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		
+		/*
+		 * Get selected Radio
+		 */
+		radioCash.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				radioSelectedText = (String) radioCash.getText();
+			}
+		});
+		radioAccount.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				radioSelectedText = (String) radioAccount.getText();
+			}
+		});
+
 		/*
 		 * Get Income amount
 		 */
