@@ -1,15 +1,22 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import java.text.DecimalFormat;
 
 
 /**
@@ -32,6 +39,8 @@ public class NewIncomeFragment extends Fragment {
 	
 	private OnFragmentInteractionListener mListener;
 	private DisplayMetrics dm;
+	private EditText txtNewIncomeAmount;
+	private String incomeAmountToBeSaved = null;
 	
 	public NewIncomeFragment() {
 		// Required empty public constructor
@@ -70,7 +79,8 @@ public class NewIncomeFragment extends Fragment {
 		// Inflate the layout for this fragment
 		View view =  inflater.inflate(R.layout.fragment_new_income, container, false);
 		
-		
+		// Initialize view elements
+		txtNewIncomeAmount = (EditText) view.findViewById(R.id.editTextNewFareAmount);
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newIncomeLayoutWraper);
 		// Get device dimensions
 		dm = getWidthAndHeightPx();
@@ -78,6 +88,52 @@ public class NewIncomeFragment extends Fragment {
 		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		
+		/*
+		 * Get Income amount
+		 */
+		txtNewIncomeAmount.setRawInputType(Configuration.KEYBOARD_12KEY);
+		txtNewIncomeAmount.setText("0.00");
+		txtNewIncomeAmount.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				txtNewIncomeAmount.post(new Runnable() {
+					@Override
+					public void run() {
+						txtNewIncomeAmount.setSelection(txtNewIncomeAmount.getText().length());
+					}
+				});
+				return false;
+			}
+		});
+		txtNewIncomeAmount.addTextChangedListener(new TextWatcher() {
+			DecimalFormat dec = new DecimalFormat("0.00");
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (!s.toString().matches("^(\\d{1,3}(,\\d{3})*|(\\d+))(\\.\\d{2})?$")) {
+					String userInput = "" + s.toString().replaceAll("[^\\d]", "");
+					if (userInput.length() > 0) {
+						Float in = Float.parseFloat(userInput);
+						float percent = in / 100;
+						
+						txtNewIncomeAmount.setText(dec.format(percent));
+						incomeAmountToBeSaved = dec.format(percent);
+						txtNewIncomeAmount.setSelection(txtNewIncomeAmount.getText().length());
+					}
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				//txtNewIncomeAmount.setBackgroundResource(R.drawable.edittext_login_box_border);
+			}
+		});
 		
 	return view;
 	}
