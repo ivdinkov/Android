@@ -4,6 +4,7 @@ android {
     compileSdkVersion 25
     buildToolsVersion "26.0.1"
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId "ivandinkov.github.com.taxiclerk"
         minSdkVersion 18
         targetSdkVersion 25

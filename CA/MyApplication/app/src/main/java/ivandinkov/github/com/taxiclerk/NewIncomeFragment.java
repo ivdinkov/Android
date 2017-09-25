@@ -66,7 +66,7 @@ public class NewIncomeFragment extends Fragment {
 	private RadioButton radioCash;
 	private static String noteToBeSaved = "";
 	private String providerToBeSaved;
-	private String incomeTypeToBeSaved = "Account";
+	private String incomePymentTypeToBeSaved = "Account";
 	private Button btnCancelNewIncome;
 	
 	public NewIncomeFragment() {
@@ -147,7 +147,7 @@ public class NewIncomeFragment extends Fragment {
 				} else {
 					// save the new income to db
 					DB db = new DB(getActivity(), null);
-					db.saveNewIncome(new Income(getDate(), incomeTypeToBeSaved, incomeAmountToBeSaved, noteToBeSaved, providerToBeSaved));
+					db.saveNewIncome(new Income(getDate(), incomePymentTypeToBeSaved, incomeAmountToBeSaved, noteToBeSaved, providerToBeSaved));
 					
 					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
 					buttonHolder.setVisibility(View.VISIBLE);
@@ -188,13 +188,13 @@ public class NewIncomeFragment extends Fragment {
 		radioCash.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				incomeTypeToBeSaved = (String) radioCash.getText();
+				incomePymentTypeToBeSaved = (String) radioCash.getText();
 			}
 		});
 		radioAccount.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				incomeTypeToBeSaved = (String) radioAccount.getText();
+				incomePymentTypeToBeSaved = (String) radioAccount.getText();
 			}
 		});
 

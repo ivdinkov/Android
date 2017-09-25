@@ -39,8 +39,6 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_PROVIDER_NAME + " TEXT,"
 					+ KEY_PR_ACTIVE + " TEXT)";
 	
-	
-	
 	private static final String TABLE_EXPENSE_TYPE = "expense_type";
 	private static final String KEY_ID_EXPENSE_TYPE = "id";
 	private static final String KEY_EXPENSE_TYPE_NAME = "expense_type_name";
@@ -52,7 +50,22 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_EXPENSE_TYPE_NAME + " TEXT,"
 					+ KEY_EXPENSE_TYPE_ACTIVE + " TEXT)";
 	
-	
+	private static final String TABLE_EXPENSE = "expense";
+	private static final String KEY_ID_EXPENSE = "id";
+	private static final String KEY_EXP_DATE = "expense_date";
+	private static final String KEY_EXP_TYPE = "expense_type";
+	private static final String KEY_EXP_AMOUNT = "expense_amount";
+	private static final String KEY_EXP_NOTES = "expense_notes";
+	private static final String KEY_EXP_PROVIDER = "expense_type";
+	/** The Constant CREATE_INCOME_TABLE. */
+	private static final String CREATE_EXPENSE_TABLE = "CREATE TABLE IF NOT EXISTS "
+					+ TABLE_EXPENSE
+					+ "(" + KEY_ID_EXPENSE + " INTEGER PRIMARY KEY,"
+					+ KEY_EXP_DATE + " TEXT,"
+					+ KEY_EXP_TYPE + " TEXT,"
+					+ KEY_EXP_AMOUNT + " TEXT,"
+					+ KEY_EXP_NOTES + " TEXT,"
+					+ KEY_EXP_PROVIDER + " TEXT)";
 	
 	private static final String TABLE_INCOME = "income";
 	private static final String KEY_ID_INCOME = "id";
@@ -74,7 +87,6 @@ public class DB extends SQLiteOpenHelper {
 	
 	
 	
-	
 	public DB(Context context, SQLiteDatabase.CursorFactory factory) {
 		super(context, DATABASE_NAME, factory, DATABASE_VERSION);
 	}
@@ -85,7 +97,7 @@ public class DB extends SQLiteOpenHelper {
 			db.execSQL(CREATE_PROVIDER_TABLE);
 			db.execSQL(CREATE_EXPENSE_TYPE_TABLE);
 //			db.execSQL(CREATE_TRIAL_TABLE);
-//			db.execSQL(CREATE_EXPENSE_TABLE);
+			db.execSQL(CREATE_EXPENSE_TABLE);
 			db.execSQL(CREATE_INCOME_TABLE);
 //			db.execSQL(CREATE_HOURS_TABLE);
 //			db.execSQL(CREATE_JOB_PROVIDER_TABLE);
@@ -100,7 +112,7 @@ public class DB extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROVIDER);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE_TYPE);
 //			db.execSQL("DROP TABLE IF EXISTS" + TABLE_TRIAL);
-//			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
 //			db.execSQL("DROP TABLE IF EXISTS " + TABLE_HOURS);
 //			db.execSQL("DROP TABLE IF EXISTS " + TABLE_JOB_PROVIDER);
@@ -273,7 +285,7 @@ public class DB extends SQLiteOpenHelper {
 	 *
 	 * @return the all providers
 	 */
-	public ArrayList<String> getAllExpenseTypesNames() {
+	public ArrayList<String> getExpenseTypeNames() {
 		ArrayList<String> expList = new ArrayList<String>();
 		
 		// Select All Query
@@ -293,8 +305,6 @@ public class DB extends SQLiteOpenHelper {
 		db.close();
 		return expList;
 	}
-	
-	
 	/**
 	 *
 	 * Income
@@ -353,6 +363,72 @@ public class DB extends SQLiteOpenHelper {
 				inc.setNote(cursor.getString(5));
 				// Adding contact to list
 				incomeList.add(inc);
+			} while (cursor.moveToNext());
+		}
+		db.close();
+		// return income list
+		return incomeList;
+	}
+	
+	
+	/**
+	 *
+	 * Expense
+	 *
+	 */
+	public long saveNewExpense(MExpense expense) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		
+		ContentValues values = new ContentValues();
+		values.clear();
+		values.put(KEY_EXP_DATE, expense.getDate());
+		values.put(KEY_EXP_TYPE, expense.getIncType());
+		values.put(KEY_EXP_AMOUNT, expense.getAmount());
+		values.put(KEY_EXP_PROVIDER, expense.getProvider());
+		values.put(KEY_EXP_NOTES, expense.getNote());
+		
+		
+		// Inserting Row
+		long result = 0;
+		try {
+			result = db.insert(TABLE_EXPENSE, null, values);
+		} catch (Exception e) {
+			Log.e("APP", "exception", e);
+		}
+		
+		// Closing database connection
+		db.close();
+		return result;
+	}
+	
+	public ArrayList<MExpense> getAllExpenses() {
+		ArrayList<MExpense> incomeList = new ArrayList<MExpense>();
+		// Select All Query
+		String selectQuery = "SELECT "
+						+ KEY_ID_EXPENSE + ","
+						+ KEY_EXP_DATE + ","
+						+ KEY_EXP_TYPE + ","
+						+ KEY_EXP_AMOUNT + ","
+						+ KEY_EXP_PROVIDER + ","
+						+ KEY_EXP_NOTES + " FROM "
+						+ TABLE_EXPENSE + " ORDER BY "
+						+ KEY_ID_EXPENSE;
+		
+		SQLiteDatabase db = this.getWritableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		// looping through all rows and adding to list
+		if (cursor.moveToFirst()) {
+			do {
+				MExpense exp = new MExpense();
+				exp.setID(Integer.parseInt(cursor.getString(0)));
+				exp.setDate(cursor.getString(1));
+				exp.setIncType(cursor.getString(2));
+				exp.setAmount(cursor.getString(3));
+				exp.setExpenseType(cursor.getString(4));
+				exp.setNote(cursor.getString(5));
+				// Adding contact to list
+				incomeList.add(exp);
 			} while (cursor.moveToNext());
 		}
 		db.close();
