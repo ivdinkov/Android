@@ -28,6 +28,7 @@ public class MExpense {
 	/** The _provider. */
 	String _expenseType;
 	
+	String _image;
 	// Empty constructor
 	/**
 	 * Instantiates a new income.
@@ -47,21 +48,23 @@ public class MExpense {
 	 * @param note the note
 	 * @param expenseType the provider
 	 */
-	public MExpense(int id, String date, String type, String amount, String note, String expenseType) {
+	public MExpense(int id, String date, String type, String amount, String note, String expenseType, String image) {
 		this._id = id;
 		this._date = date;
 		this._pay_type = type;
 		this._amount = amount;
 		this._note = note;
 		this._expenseType = expenseType;
+		this._image = image;
 	}
 
-	public MExpense(String date, String type, String amount, String note, String expenseType) {
+	public MExpense(String date, String type, String amount, String note, String expenseType,String image) {
 		this._date = date;
 		this._pay_type = type;
 		this._amount = amount;
 		this._note = note;
 		this._expenseType = expenseType;
+		this._image = image;
 	}
 	
 	
@@ -184,4 +187,23 @@ public class MExpense {
 	public String getExpenseType() {
 		return this._expenseType;
 	}
+	/**
+	 * Sets the provider.
+	 *
+	 * @param image the new provider
+	 */
+	public void setImage(String image) {
+		this._image = image;
+	}
+	
+	// getting provider
+	/**
+	 * Gets the provider.
+	 *
+	 * @return the image
+	 */
+	public String getImage() {
+		return this._image;
+	}
+	
 }

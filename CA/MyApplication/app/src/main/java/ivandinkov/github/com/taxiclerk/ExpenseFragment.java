@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,15 +22,15 @@ import java.util.ArrayList;
  * Use the {@link ExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExpenseFragment  extends ListFragment {
-	// TODO: Rename parameter arguments, choose names that match
+public class ExpenseFragment extends ListFragment {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 	
-	// TODO: Rename and change types of parameters
 	private String mParam1;
 	private String mParam2;
+	private static final String TAG = "TC";
+	
 	
 	private OnFragmentInteractionListener mListener;
 	
@@ -84,7 +85,8 @@ public class ExpenseFragment  extends ListFragment {
 		expenseList = db.getAllExpenses();
 		
 		for (MExpense cn : expenseList) {
-			list.add(new MExpense(Integer.valueOf(cn.getID()), cn.getDate(), cn.getExpPayType(), cn.getAmount(), cn.getExpenseType(), cn.getNote()));
+			list.add(new MExpense(Integer.valueOf(cn.getID()), cn.getDate(), cn.getExpPayType(), cn.getAmount(), cn.getExpenseType(), cn.getNote(), cn.getImage()));
+			Log.i(TAG," Image:  "+ cn.getImage());
 		}
 		db.close();
 		return list;

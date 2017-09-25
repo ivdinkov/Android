@@ -1,10 +1,14 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,6 +52,7 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 		public TextView expense_amount;
 		public TextView expense_provider;
 		public TextView expense_note;
+		public TextView expense_image;
 	}
 	
 	
@@ -70,6 +75,8 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 				viewHolder.expense_amount = (TextView) view.findViewById(R.id.textViewAmount);
 				viewHolder.expense_provider = (TextView) view.findViewById(R.id.textViewProviderName);
 				viewHolder.expense_note = (TextView) view.findViewById(R.id.textViewNote);
+				viewHolder.expense_image = (TextView) view.findViewById(R.id.imageExp);
+				
 //				viewHolder.btnEdit = (ImageButton) view.findViewById(R.id.btnIncomeEdit);
 //				viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
 ////
@@ -115,7 +122,7 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 		holder.expense_amount.setText(list.get(position).getAmount());
 		holder.expense_provider.setText(list.get(position).getNote());
 		holder.expense_note.setText(list.get(position).getExpenseType());
-		
+		holder.expense_image.setText(list.get(position).getImage());
 		return view;
 	}
 	

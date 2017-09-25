@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,7 +38,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.text.DateFormat;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +50,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
-
 
 
 /**
@@ -90,7 +91,9 @@ public class NewExpenseFragment extends Fragment {
 	private static String dateToDisplay;
 	private static String dateToBeSaved;
 	private static TextView txtCurDate;
-	private Uri imageToUploadUri;
+	private Uri tempImageUri = null;
+	private String endImage;
+	private boolean isPhotoTaken = false;
 	static final int REQUEST_TAKE_PHOTO = 1;
 	
 	
@@ -158,13 +161,14 @@ public class NewExpenseFragment extends Fragment {
 		} catch (Exception e) {
 			Log.e(TAG, "ERROR Unable to pick date: ", e);
 		}
+		
 		imgCam.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//startActivity(new Intent(getActivity(),ImagePickActivity.class));
 				takePicture();
 			}
 		});
+		
 		imgExpCalendar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -172,6 +176,7 @@ public class NewExpenseFragment extends Fragment {
 				picker.show(getFragmentManager(), "datePicker");
 			}
 		});
+		
 		btnCancelNewExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -184,6 +189,7 @@ public class NewExpenseFragment extends Fragment {
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 			}
 		});
+		
 		btnSaveNewExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -195,7 +201,16 @@ public class NewExpenseFragment extends Fragment {
 				} else {
 					// save the new income to db
 					DB db = new DB(getActivity(), null);
-					db.saveNewExpense(new MExpense(dateToBeSaved, expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved));
+					// user validated => check if taken photo
+					if (isPhotoTaken && tempImageUri != null) {
+						endImage = tempImageUri.toString();
+						// helper to get image name from uri
+						//Uri t = Uri.parse(tempImageUri.toString());
+						//File f = new File("" + t);
+						//endImage = f.getName();
+					}
+					
+					db.saveNewExpense(new MExpense(dateToBeSaved, expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved,endImage));
 					
 					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
 					buttonHolder.setVisibility(View.VISIBLE);
@@ -229,7 +244,7 @@ public class NewExpenseFragment extends Fragment {
 				}).create().show();
 			}
 		});
-				/*
+		/*
 		 * Get selected Radio
 		 */
 		radioCashExpense.setOnClickListener(new View.OnClickListener() {
@@ -307,12 +322,12 @@ public class NewExpenseFragment extends Fragment {
 		return view;
 	}
 	
+	
 	private void takePicture() {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-		
 		File f = new File(Environment.getExternalStorageDirectory(), createNewImageFile());
 		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-		imageToUploadUri = Uri.fromFile(f);
+		tempImageUri = Uri.fromFile(f);
 		startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
 	}
 	
@@ -321,14 +336,18 @@ public class NewExpenseFragment extends Fragment {
 		String imageFileName = "TC_" + timeStamp + "_.jpg";
 		return imageFileName;
 	}
+	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 			//Bundle extras = data.getExtras();
 			//Bitmap imageBitmap = (Bitmap) extras.get("data");
 			//imageView.setImageBitmap(imageBitmap);
+			isPhotoTaken = true;
 		}
 	}
+	
+	
 	
 	private void showNoteDialog() {
 		FragmentManager fm = getFragmentManager();
