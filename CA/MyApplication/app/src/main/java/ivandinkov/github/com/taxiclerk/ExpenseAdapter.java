@@ -1,42 +1,36 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 /**
- * Created by iv on 24/09/2017.
+ * Created by iv on 25/09/2017.
  */
 
-public class IncomeAdapter extends ArrayAdapter<Income> {
+public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 	
 	private final Activity mContext;
-	private final ArrayList<Income> list;
+	private final ArrayList<MExpense> list;
 	//private final UpdateRecord updateCallback;
-	Context mContex;
-	private DisplayMetrics dm;
 	
 	public interface UpdateRecord {
 		void onRecordSelectUpdate(int recordID, int flag);
 	}
 	
-//	public IncomeAdapter(Activity context, ArrayList<Income> list, UpdateRecord updateCallback) {
+	//	public IncomeAdapter(Activity context, ArrayList<Income> list, UpdateRecord updateCallback) {
 //		super(context, R.layout.single_income_record, list);
 //		this.mContext = context;
 //		this.list = list;
 //		this.updateCallback = updateCallback;
 //	}
-	public IncomeAdapter(Activity context, ArrayList<Income> list) {
-		super(context, R.layout.single_income_record, list);
+	public ExpenseAdapter(Activity context, ArrayList<MExpense> list) {
+		super(context, R.layout.single_expense_record, list);
 		this.mContext = context;
 		this.list = list;
 	}
@@ -47,13 +41,13 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 	 */
 	static class ViewHolder {
 		/** The provider. */
-		protected TextView income;
-		public TextView income_id;
-		public TextView income_date;
-		public TextView income_type;
-		public TextView income_amount;
-		public TextView income_provider;
-		public TextView income_note;
+		protected TextView expense;
+		public TextView expense_id;
+		public TextView expense_date;
+		public TextView expense_type;
+		public TextView expense_amount;
+		public TextView expense_provider;
+		public TextView expense_note;
 	}
 	
 	
@@ -68,14 +62,14 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 				view = inflator.inflate(R.layout.no_income, null);
 			} else {
 				
-				view = inflator.inflate(R.layout.single_income_record, null);
-				final IncomeAdapter.ViewHolder viewHolder = new IncomeAdapter.ViewHolder();
-				viewHolder.income_id = (TextView) view.findViewById(R.id.income_id);
-				viewHolder.income_date = (TextView) view.findViewById(R.id.textViewDate);
-				viewHolder.income_type = (TextView) view.findViewById(R.id.textViewPaymentType);
-				viewHolder.income_amount = (TextView) view.findViewById(R.id.textViewAmount);
-				viewHolder.income_provider = (TextView) view.findViewById(R.id.textViewProviderName);
-				viewHolder.income_note = (TextView) view.findViewById(R.id.textViewNote);
+				view = inflator.inflate(R.layout.single_expense_record, null);
+				final ExpenseAdapter.ViewHolder viewHolder = new ExpenseAdapter.ViewHolder();
+				viewHolder.expense_id = (TextView) view.findViewById(R.id.expense_id);
+				viewHolder.expense_date = (TextView) view.findViewById(R.id.textViewDate);
+				viewHolder.expense_type = (TextView) view.findViewById(R.id.textViewPaymentType);
+				viewHolder.expense_amount = (TextView) view.findViewById(R.id.textViewAmount);
+				viewHolder.expense_provider = (TextView) view.findViewById(R.id.textViewProviderName);
+				viewHolder.expense_note = (TextView) view.findViewById(R.id.textViewNote);
 //				viewHolder.btnEdit = (ImageButton) view.findViewById(R.id.btnIncomeEdit);
 //				viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
 ////
@@ -115,12 +109,12 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 			view = convertView;
 		}
 		ViewHolder holder = (ViewHolder) view.getTag();
-		holder.income_id.setText(String.valueOf(list.get(position).getID()));
-		holder.income_date.setText(list.get(position).getDate());
-		holder.income_type.setText(list.get(position).getIncType());
-		holder.income_amount.setText(list.get(position).getAmount());
-		holder.income_provider.setText(list.get(position).getNote());
-		holder.income_note.setText(list.get(position).getProvider());
+		holder.expense_id.setText(String.valueOf(list.get(position).getID()));
+		holder.expense_date.setText(list.get(position).getDate());
+		holder.expense_type.setText(list.get(position).getExpPayType());
+		holder.expense_amount.setText(list.get(position).getAmount());
+		holder.expense_provider.setText(list.get(position).getNote());
+		holder.expense_note.setText(list.get(position).getExpenseType());
 		
 		return view;
 	}

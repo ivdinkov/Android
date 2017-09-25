@@ -22,7 +22,7 @@ public class Income {
 	/** The _active. */
 	String _active;
 	
-	/** The _type. */
+	/** The _pay_type. */
 	String _type;
 	
 	/** The _provider. */

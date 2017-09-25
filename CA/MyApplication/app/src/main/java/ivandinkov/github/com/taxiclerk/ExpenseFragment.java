@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+
+import java.util.ArrayList;
 
 
 /**
@@ -17,7 +21,7 @@ import android.view.ViewGroup;
  * Use the {@link ExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExpenseFragment extends Fragment {
+public class ExpenseFragment  extends ListFragment {
 	// TODO: Rename parameter arguments, choose names that match
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
@@ -64,7 +68,27 @@ public class ExpenseFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_expense, container, false);
+		View view = inflater.inflate(R.layout.fragment_expense, container, false);
+		
+		// create an array of Strings
+		ArrayAdapter<MExpense> adapter = new ExpenseAdapter(getActivity(), getModel());
+		setListAdapter(adapter);
+		
+		return view;
+	}
+	
+	private ArrayList<MExpense> getModel() {
+		DB db = new DB(getActivity(), null);
+		ArrayList<MExpense> expenseList = new ArrayList<MExpense>();
+		ArrayList<MExpense> list = new ArrayList<MExpense>();
+		expenseList = db.getAllExpenses();
+		
+		for (MExpense cn : expenseList) {
+			list.add(new MExpense(Integer.valueOf(cn.getID()), cn.getDate(), cn.getExpPayType(), cn.getAmount(), cn.getExpenseType(), cn.getNote()));
+		}
+		db.close();
+		return list;
+		
 	}
 	
 	// TODO: Rename method, update argument and hook method into UI event

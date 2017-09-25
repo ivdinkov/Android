@@ -22,8 +22,8 @@ public class MExpense {
 	/** The _active. */
 	String _active;
 	
-	/** The _type. */
-	String _type;
+	/** The _pay_type. */
+	String _pay_type;
 	
 	/** The _provider. */
 	String _expenseType;
@@ -50,7 +50,7 @@ public class MExpense {
 	public MExpense(int id, String date, String type, String amount, String note, String expenseType) {
 		this._id = id;
 		this._date = date;
-		this._type = type;
+		this._pay_type = type;
 		this._amount = amount;
 		this._note = note;
 		this._expenseType = expenseType;
@@ -58,7 +58,7 @@ public class MExpense {
 
 	public MExpense(String date, String type, String amount, String note, String expenseType) {
 		this._date = date;
-		this._type = type;
+		this._pay_type = type;
 		this._amount = amount;
 		this._note = note;
 		this._expenseType = expenseType;
@@ -111,8 +111,8 @@ public class MExpense {
 	 *
 	 * @return the inc type
 	 */
-	public String getIncType() {
-		return this._type;
+	public String getExpPayType() {
+		return this._pay_type;
 	}
 	
 	// setting type
@@ -121,8 +121,8 @@ public class MExpense {
 	 *
 	 * @param type the new inc type
 	 */
-	public void setIncType(String type) {
-		this._type = type;
+	public void setExpPayType(String type) {
+		this._pay_type = type;
 	}
 	
 	// getting amount
@@ -181,7 +181,7 @@ public class MExpense {
 	 *
 	 * @return the provider
 	 */
-	public String getProvider() {
+	public String getExpenseType() {
 		return this._expenseType;
 	}
 }

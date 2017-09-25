@@ -53,16 +53,16 @@ public class DB extends SQLiteOpenHelper {
 	private static final String TABLE_EXPENSE = "expense";
 	private static final String KEY_ID_EXPENSE = "id";
 	private static final String KEY_EXP_DATE = "expense_date";
-	private static final String KEY_EXP_TYPE = "expense_type";
+	private static final String KEY_EXP_PAYMENT_TYPE = "expense_payment_type";
 	private static final String KEY_EXP_AMOUNT = "expense_amount";
 	private static final String KEY_EXP_NOTES = "expense_notes";
 	private static final String KEY_EXP_PROVIDER = "expense_type";
-	/** The Constant CREATE_INCOME_TABLE. */
+	/** The Constant CREATE_EXPENSE_TABLE. */
 	private static final String CREATE_EXPENSE_TABLE = "CREATE TABLE IF NOT EXISTS "
 					+ TABLE_EXPENSE
 					+ "(" + KEY_ID_EXPENSE + " INTEGER PRIMARY KEY,"
 					+ KEY_EXP_DATE + " TEXT,"
-					+ KEY_EXP_TYPE + " TEXT,"
+					+ KEY_EXP_PAYMENT_TYPE + " TEXT,"
 					+ KEY_EXP_AMOUNT + " TEXT,"
 					+ KEY_EXP_NOTES + " TEXT,"
 					+ KEY_EXP_PROVIDER + " TEXT)";
@@ -83,8 +83,7 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_INC_AMOUNT + " TEXT,"
 					+ KEY_INC_NOTES + " TEXT,"
 					+ KEY_INC_PROVIDER + " TEXT)";
-	
-	
+	private Cursor cursor;
 	
 	
 	public DB(Context context, SQLiteDatabase.CursorFactory factory) {
@@ -96,13 +95,10 @@ public class DB extends SQLiteOpenHelper {
 		try {
 			db.execSQL(CREATE_PROVIDER_TABLE);
 			db.execSQL(CREATE_EXPENSE_TYPE_TABLE);
-//			db.execSQL(CREATE_TRIAL_TABLE);
 			db.execSQL(CREATE_EXPENSE_TABLE);
 			db.execSQL(CREATE_INCOME_TABLE);
-//			db.execSQL(CREATE_HOURS_TABLE);
-//			db.execSQL(CREATE_JOB_PROVIDER_TABLE);
 		} catch (Exception e) {
-			Log.e(TAG, "DB onCreate exception", e);
+			Log.e(TAG, "DB onCreate: ", e);
 		}
 	}
 	
@@ -111,13 +107,10 @@ public class DB extends SQLiteOpenHelper {
 		try {
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROVIDER);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE_TYPE);
-//			db.execSQL("DROP TABLE IF EXISTS" + TABLE_TRIAL);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EXPENSE);
 			db.execSQL("DROP TABLE IF EXISTS " + TABLE_INCOME);
-//			db.execSQL("DROP TABLE IF EXISTS " + TABLE_HOURS);
-//			db.execSQL("DROP TABLE IF EXISTS " + TABLE_JOB_PROVIDER);
 		} catch (Exception e) {
-			Log.e(TAG, "DB onUpgrade exception", e);
+			Log.e(TAG, "DB onUpgrade: ", e);
 		}
 		// Create tables again
 		onCreate(db);
@@ -137,15 +130,13 @@ public class DB extends SQLiteOpenHelper {
 		values.put(KEY_PR_ACTIVE, provider.getActive());
 		
 		try {
-			/** Inserting Row */
 			long success = db.insert(TABLE_PROVIDER, null, values);
-			/**  Close connection */
 			db.close();
 			if(success != -1){
 				return true;
 			}
 		}catch(Exception e){
-			// TODO Log Exception in log file
+			Log.e(TAG, "DB insertProvider: ", e);
 		}
 		return false;
 	}
@@ -161,7 +152,12 @@ public class DB extends SQLiteOpenHelper {
 		String selectQuery = "SELECT * FROM " + TABLE_PROVIDER + " WHERE " + KEY_PR_ACTIVE + " LIKE 'yes'";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		try{
+			cursor = db.rawQuery(selectQuery, null);
+		}catch(Exception e){
+			Log.e(TAG, "DB getAllProviders exception", e);
+		}
+		 
 		
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
@@ -200,7 +196,11 @@ public class DB extends SQLiteOpenHelper {
 		String selectQuery = "SELECT " + KEY_PROVIDER_NAME + " FROM " + TABLE_PROVIDER + " WHERE " + KEY_PR_ACTIVE + " LIKE 'yes'";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		try{
+			cursor = db.rawQuery(selectQuery, null);
+		}catch(Exception e){
+			Log.e(TAG, "DB getProviderNames: ", e);
+		}
 		
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
@@ -228,15 +228,13 @@ public class DB extends SQLiteOpenHelper {
 		values.put(KEY_EXPENSE_TYPE_ACTIVE, expense.getActive());
 		
 		try {
-			/** Inserting Row */
 			long success = db.insert(TABLE_EXPENSE_TYPE, null, values);
-			/**  Close connection */
 			db.close();
 			if(success != -1){
 				return true;
 			}
 		}catch(Exception e){
-			Log.i(TAG,e.toString());
+			Log.e(TAG, "DB Insert New Expense: ", e);
 		}
 		return false;
 	}
@@ -253,7 +251,11 @@ public class DB extends SQLiteOpenHelper {
 		String selectQuery = "SELECT * FROM " + TABLE_EXPENSE_TYPE + " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		try{
+			cursor = db.rawQuery(selectQuery, null);
+		}catch(Exception e){
+			Log.e(TAG, "DB GetExpenseTypeList: ", e);
+		}
 		
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
@@ -292,8 +294,11 @@ public class DB extends SQLiteOpenHelper {
 		String selectQuery = "SELECT " + KEY_EXPENSE_TYPE_NAME + " FROM " + TABLE_EXPENSE_TYPE + " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
-		
+		try {
+			cursor = db.rawQuery(selectQuery, null);
+		}catch(Exception e){
+			Log.e(TAG, "DB getExpenseTypeNames: ", e);
+		}
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
 			do {
@@ -306,9 +311,7 @@ public class DB extends SQLiteOpenHelper {
 		return expList;
 	}
 	/**
-	 *
 	 * Income
-	 *
 	 */
 	public long saveNewIncome(Income income) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -327,7 +330,7 @@ public class DB extends SQLiteOpenHelper {
 		try {
 			result = db.insert(TABLE_INCOME, null, values);
 		} catch (Exception e) {
-			Log.e("APP", "exception", e);
+			Log.e(TAG, "DB saveNewIncome: ", e);
 		}
 		
 		// Closing database connection
@@ -349,7 +352,11 @@ public class DB extends SQLiteOpenHelper {
 						+ KEY_ID_INCOME;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		try{
+			cursor = db.rawQuery(selectQuery, null);
+		}catch(Exception e){
+			Log.e(TAG, "DB getAllIncome: ", e);
+		}
 		
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
@@ -369,12 +376,8 @@ public class DB extends SQLiteOpenHelper {
 		// return income list
 		return incomeList;
 	}
-	
-	
 	/**
-	 *
 	 * Expense
-	 *
 	 */
 	public long saveNewExpense(MExpense expense) {
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -382,9 +385,9 @@ public class DB extends SQLiteOpenHelper {
 		ContentValues values = new ContentValues();
 		values.clear();
 		values.put(KEY_EXP_DATE, expense.getDate());
-		values.put(KEY_EXP_TYPE, expense.getIncType());
+		values.put(KEY_EXP_PAYMENT_TYPE, expense.getExpPayType());
 		values.put(KEY_EXP_AMOUNT, expense.getAmount());
-		values.put(KEY_EXP_PROVIDER, expense.getProvider());
+		values.put(KEY_EXP_PROVIDER, expense.getExpenseType());
 		values.put(KEY_EXP_NOTES, expense.getNote());
 		
 		
@@ -393,7 +396,7 @@ public class DB extends SQLiteOpenHelper {
 		try {
 			result = db.insert(TABLE_EXPENSE, null, values);
 		} catch (Exception e) {
-			Log.e("APP", "exception", e);
+			Log.e(TAG, "DB saveNewExpense: ", e);
 		}
 		
 		// Closing database connection
@@ -402,12 +405,12 @@ public class DB extends SQLiteOpenHelper {
 	}
 	
 	public ArrayList<MExpense> getAllExpenses() {
-		ArrayList<MExpense> incomeList = new ArrayList<MExpense>();
+		ArrayList<MExpense> expenseList = new ArrayList<MExpense>();
 		// Select All Query
 		String selectQuery = "SELECT "
 						+ KEY_ID_EXPENSE + ","
 						+ KEY_EXP_DATE + ","
-						+ KEY_EXP_TYPE + ","
+						+ KEY_EXP_PAYMENT_TYPE + ","
 						+ KEY_EXP_AMOUNT + ","
 						+ KEY_EXP_PROVIDER + ","
 						+ KEY_EXP_NOTES + " FROM "
@@ -415,7 +418,12 @@ public class DB extends SQLiteOpenHelper {
 						+ KEY_ID_EXPENSE;
 		
 		SQLiteDatabase db = this.getWritableDatabase();
-		Cursor cursor = db.rawQuery(selectQuery, null);
+		try{
+			cursor = db.rawQuery(selectQuery, null);
+		}catch (Exception e)
+		{
+			Log.e(TAG, "DB getAllExpenses: ", e);
+		}
 		
 		// looping through all rows and adding to list
 		if (cursor.moveToFirst()) {
@@ -423,17 +431,17 @@ public class DB extends SQLiteOpenHelper {
 				MExpense exp = new MExpense();
 				exp.setID(Integer.parseInt(cursor.getString(0)));
 				exp.setDate(cursor.getString(1));
-				exp.setIncType(cursor.getString(2));
+				exp.setExpPayType(cursor.getString(2));
 				exp.setAmount(cursor.getString(3));
 				exp.setExpenseType(cursor.getString(4));
 				exp.setNote(cursor.getString(5));
 				// Adding contact to list
-				incomeList.add(exp);
+				expenseList.add(exp);
 			} while (cursor.moveToNext());
 		}
 		db.close();
 		// return income list
-		return incomeList;
+		return expenseList;
 	}
 	
 }
