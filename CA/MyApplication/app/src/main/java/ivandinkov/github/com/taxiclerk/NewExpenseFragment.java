@@ -5,10 +5,14 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -34,12 +38,17 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+
+import static android.app.Activity.RESULT_OK;
+
 
 
 /**
@@ -81,6 +90,8 @@ public class NewExpenseFragment extends Fragment {
 	private static String dateToDisplay;
 	private static String dateToBeSaved;
 	private static TextView txtCurDate;
+	private Uri imageToUploadUri;
+	static final int REQUEST_TAKE_PHOTO = 1;
 	
 	
 	public NewExpenseFragment() {
@@ -142,11 +153,18 @@ public class NewExpenseFragment extends Fragment {
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		
 		// Get current date
-		try{
+		try {
 			setCurrentDate();
-		}catch(Exception e){
+		} catch (Exception e) {
 			Log.e(TAG, "ERROR Unable to pick date: ", e);
 		}
+		imgCam.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//startActivity(new Intent(getActivity(),ImagePickActivity.class));
+				takePicture();
+			}
+		});
 		imgExpCalendar.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -287,6 +305,29 @@ public class NewExpenseFragment extends Fragment {
 			}
 		});
 		return view;
+	}
+	
+	private void takePicture() {
+		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+		
+		File f = new File(Environment.getExternalStorageDirectory(), createNewImageFile());
+		takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+		imageToUploadUri = Uri.fromFile(f);
+		startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+	}
+	
+	private String createNewImageFile() {
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+		String imageFileName = "TC_" + timeStamp + "_.jpg";
+		return imageFileName;
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+			//Bundle extras = data.getExtras();
+			//Bitmap imageBitmap = (Bitmap) extras.get("data");
+			//imageView.setImageBitmap(imageBitmap);
+		}
 	}
 	
 	private void showNoteDialog() {
