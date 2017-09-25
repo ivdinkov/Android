@@ -29,6 +29,7 @@ public class MExpense {
 	String _expenseType;
 	
 	String _image;
+	
 	// Empty constructor
 	/**
 	 * Instantiates a new income.
@@ -58,7 +59,7 @@ public class MExpense {
 		this._image = image;
 	}
 
-	public MExpense(String date, String type, String amount, String note, String expenseType,String image) {
+	public MExpense(String date, String type, String amount, String note, String expenseType, String image) {
 		this._date = date;
 		this._pay_type = type;
 		this._amount = amount;
@@ -188,8 +189,7 @@ public class MExpense {
 		return this._expenseType;
 	}
 	/**
-	 * Sets the provider.
-	 *
+	 * Sets the image
 	 * @param image the new provider
 	 */
 	public void setImage(String image) {
@@ -200,10 +200,9 @@ public class MExpense {
 	/**
 	 * Gets the provider.
 	 *
-	 * @return the image
+	 * @return the provider
 	 */
 	public String getImage() {
 		return this._image;
 	}
-	
 }

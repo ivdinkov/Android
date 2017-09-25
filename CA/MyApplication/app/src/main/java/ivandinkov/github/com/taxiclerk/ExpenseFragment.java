@@ -86,7 +86,7 @@ public class ExpenseFragment extends ListFragment {
 		
 		for (MExpense cn : expenseList) {
 			list.add(new MExpense(Integer.valueOf(cn.getID()), cn.getDate(), cn.getExpPayType(), cn.getAmount(), cn.getExpenseType(), cn.getNote(), cn.getImage()));
-			Log.i(TAG," Image:  "+ cn.getImage());
+			
 		}
 		db.close();
 		return list;

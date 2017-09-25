@@ -57,7 +57,6 @@ public class DB extends SQLiteOpenHelper {
 	private static final String KEY_EXP_AMOUNT = "expense_amount";
 	private static final String KEY_EXP_NOTES = "expense_notes";
 	private static final String KEY_EXP_PROVIDER = "expense_type";
-	private static final String KEY_EXP_IMAGE = "expense_img";
 	/** The Constant CREATE_EXPENSE_TABLE. */
 	private static final String CREATE_EXPENSE_TABLE = "CREATE TABLE IF NOT EXISTS "
 					+ TABLE_EXPENSE
@@ -66,8 +65,7 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_EXP_PAYMENT_TYPE + " TEXT,"
 					+ KEY_EXP_AMOUNT + " TEXT,"
 					+ KEY_EXP_NOTES + " TEXT,"
-					+ KEY_EXP_PROVIDER + " TEXT,"
-					+ KEY_EXP_IMAGE + " TEXT)";
+					+ KEY_EXP_PROVIDER + " TEXT)";
 	
 	private static final String TABLE_INCOME = "income";
 	private static final String KEY_ID_INCOME = "id";
@@ -391,7 +389,6 @@ public class DB extends SQLiteOpenHelper {
 		values.put(KEY_EXP_AMOUNT, expense.getAmount());
 		values.put(KEY_EXP_PROVIDER, expense.getExpenseType());
 		values.put(KEY_EXP_NOTES, expense.getNote());
-		values.put(KEY_EXP_IMAGE, expense.getImage());
 		
 		
 		// Inserting Row
@@ -416,8 +413,7 @@ public class DB extends SQLiteOpenHelper {
 						+ KEY_EXP_PAYMENT_TYPE + ","
 						+ KEY_EXP_AMOUNT + ","
 						+ KEY_EXP_PROVIDER + ","
-						+ KEY_EXP_NOTES + ","
-						+ KEY_EXP_IMAGE + " FROM "
+						+ KEY_EXP_NOTES + " FROM "
 						+ TABLE_EXPENSE + " ORDER BY "
 						+ KEY_ID_EXPENSE;
 		
@@ -439,7 +435,6 @@ public class DB extends SQLiteOpenHelper {
 				exp.setAmount(cursor.getString(3));
 				exp.setExpenseType(cursor.getString(4));
 				exp.setNote(cursor.getString(5));
-				exp.setImage(cursor.getString(6));
 				// Adding contact to list
 				expenseList.add(exp);
 			} while (cursor.moveToNext());

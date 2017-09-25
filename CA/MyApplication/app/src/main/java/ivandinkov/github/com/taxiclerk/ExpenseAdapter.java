@@ -2,8 +2,11 @@ package ivandinkov.github.com.taxiclerk;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 
 public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 	
+	private static final String TAG = "TC";
 	private final Activity mContext;
 	private final ArrayList<MExpense> list;
 	//private final UpdateRecord updateCallback;
@@ -52,7 +57,7 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 		public TextView expense_amount;
 		public TextView expense_provider;
 		public TextView expense_note;
-		public TextView expense_image;
+		public ImageView expense_image;
 	}
 	
 	
@@ -75,7 +80,7 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 				viewHolder.expense_amount = (TextView) view.findViewById(R.id.textViewAmount);
 				viewHolder.expense_provider = (TextView) view.findViewById(R.id.textViewProviderName);
 				viewHolder.expense_note = (TextView) view.findViewById(R.id.textViewNote);
-				viewHolder.expense_image = (TextView) view.findViewById(R.id.imageExp);
+				viewHolder.expense_image = (ImageView) view.findViewById(R.id.imageExp);
 				
 //				viewHolder.btnEdit = (ImageButton) view.findViewById(R.id.btnIncomeEdit);
 //				viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
@@ -122,10 +127,40 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 		holder.expense_amount.setText(list.get(position).getAmount());
 		holder.expense_provider.setText(list.get(position).getNote());
 		holder.expense_note.setText(list.get(position).getExpenseType());
-		holder.expense_image.setText(list.get(position).getImage());
+		holder.expense_image.setImageBitmap(decodeSampledBitmapFromResource(list.get(position).getImage(),30,30));
 		return view;
 	}
 	
 	
+	public static int calculateInSampleSize(
+					BitmapFactory.Options options, int reqWidth, int reqHeight) {
+// Raw height and width of image
+		final int height = options.outHeight;
+		final int width = options.outWidth;
+		int inSampleSize = 2;
+
+		if (height > reqHeight || width > reqWidth) {
+			if (width > height) {
+				inSampleSize = Math.round((float)height / (float)reqHeight);
+			} else {
+				inSampleSize = Math.round((float)width / (float)reqWidth);
+			}
+		}
+		return inSampleSize;
+	}
 	
+	public static Bitmap decodeSampledBitmapFromResource(String resId,int reqWidth, int reqHeight) {
+		
+		// First decode with inJustDecodeBounds=true to check dimensions
+		final BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(resId, options);
+		
+		// Calculate inSampleSize
+		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		
+		// Decode bitmap with inSampleSize set
+		options.inJustDecodeBounds = false;
+		return BitmapFactory.decodeFile(resId, options);
+	}
 }
