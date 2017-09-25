@@ -53,7 +53,7 @@
     <string-array name="stations">
         <item>Heuston</item>
         <item>Connoly</item>
-        <item>Paerse</item>
+        <item>Pearse</item>
     </string-array>
     <string-array name="minutes">
         <item>30</item>

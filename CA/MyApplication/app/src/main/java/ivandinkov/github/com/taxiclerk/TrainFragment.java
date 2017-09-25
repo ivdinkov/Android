@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -37,6 +38,8 @@ public class TrainFragment extends Fragment {
 	private DisplayMetrics dm;
 	private Spinner spinnerStation;
 	private Spinner spinnerTime;
+	private String selectedStation;
+	private String selectedTime;
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
@@ -90,28 +93,47 @@ public class TrainFragment extends Fragment {
 		dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
 		LinearLayout.LayoutParams lpWrapper = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
-		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
-		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.9)) / 2;
+		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.9)) / 2;
 		
+		
+		// Spinners
 		spinnerStation = (Spinner) view.findViewById(R.id.spinnerStation);
+		ArrayAdapter<CharSequence> adapterStations = ArrayAdapter.createFromResource(getActivity(),
+						R.array.stations, android.R.layout.simple_spinner_item);
+		adapterStations.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerStation.setAdapter(adapterStations);
+		
 		spinnerTime = (Spinner) view.findViewById(R.id.spinnerTime);
+		ArrayAdapter<CharSequence> adapterTime = ArrayAdapter.createFromResource(getActivity(),
+						R.array.minutes, android.R.layout.simple_spinner_item);
+		adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinnerTime.setAdapter(adapterTime);
 		
-		addItemsOnSpinnerStations();
-		addItemsOnSpinnerMinutes();
-		addListenerOnSpinnerStationItemSelection();
-		addListenerOnSpinnerMinutesItemSelection();
 		
-		public void addItemsOnSpinnerStations() {
+		spinnerStation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				
+			}
 			
-			List<String> list = new ArrayList<String>();
-			list.add("list 1");
-			list.add("list 2");
-			list.add("list 3");
-			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),
-							android.R.layout.simple_spinner_item, list);
-			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			spinnerStation.setAdapter(dataAdapter);
-		}
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+		
+		spinnerTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				
+			}
+			
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
 		
 		
 		if (!checkConnection()) {
@@ -125,6 +147,7 @@ public class TrainFragment extends Fragment {
 		
 		return view;
 	}
+	
 	
 	// TODO: Rename method, update argument and hook method into UI event
 	public void onButtonPressed(Uri uri) {
