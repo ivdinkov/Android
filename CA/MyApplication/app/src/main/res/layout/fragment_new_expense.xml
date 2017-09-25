@@ -95,7 +95,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/ten_dp"
-                android:layout_weight="30"
+                android:layout_weight="40"
                 android:text="note"/>
 
             <ImageView
@@ -103,8 +103,26 @@
                 android:layout_width="0dp"
                 android:layout_height="44dp"
                 android:layout_gravity="bottom"
-                android:layout_weight="50"
+                android:layout_weight="20"
                 app:srcCompat="@drawable/ic_menu_camera"/>
+
+            <ImageView
+                android:id="@+id/imageExpCalendar"
+                android:layout_width="0dp"
+                android:layout_height="44dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="20"
+                app:srcCompat="@drawable/ic_menu_gallery"/>
+
+            <TextView
+                android:id="@+id/textViewCurDateExp"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_weight="20"
+                android:layout_gravity="bottom"
+                android:textSize="15sp"
+                android:text=""/>
+
 
         </LinearLayout>
 

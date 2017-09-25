@@ -1,6 +1,7 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +16,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,6 +39,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 /**
@@ -55,8 +59,8 @@ public class NewExpenseFragment extends Fragment {
 	// TODO: Rename and change types of parameters
 	private String mParam1;
 	private String mParam2;
-	
 	private OnFragmentInteractionListener mListener;
+	private static final String TAG = "TC";
 	private DisplayMetrics dm;
 	private String expenseAmountToBeSaved;
 	private Button btnNewExpenseNote;
@@ -71,6 +75,12 @@ public class NewExpenseFragment extends Fragment {
 	static private String noteToBeSaved;
 	private String expenseTypeToBeSaved;
 	private EditText txtAmountToBeSaved;
+	private ImageView imgExpCalendar;
+	private static SimpleDateFormat sdf;
+	private static SimpleDateFormat sdfDB;
+	private static String dateToDisplay;
+	private static String dateToBeSaved;
+	private static TextView txtCurDate;
 	
 	
 	public NewExpenseFragment() {
@@ -85,7 +95,6 @@ public class NewExpenseFragment extends Fragment {
 	 * @param param2 Parameter 2.
 	 * @return A new instance of fragment NewExpenseFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static NewExpenseFragment newInstance(String param1, String param2) {
 		NewExpenseFragment fragment = new NewExpenseFragment();
 		Bundle args = new Bundle();
@@ -120,6 +129,9 @@ public class NewExpenseFragment extends Fragment {
 		radioBankExpense = (RadioButton) view.findViewById(R.id.bankNewExpense);
 		btnCancelNewExpense = (Button) view.findViewById(R.id.btnCancelNewExpense);
 		imgCam = (ImageView) view.findViewById(R.id.imageCam);
+		imgExpCalendar = (ImageView) view.findViewById(R.id.imageExpCalendar);
+		txtCurDate = (TextView) view.findViewById(R.id.textViewCurDateExp);
+		
 		
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newExpenseLayoutWraper);
 		// Get device dimensions
@@ -129,6 +141,19 @@ public class NewExpenseFragment extends Fragment {
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		
+		// Get current date
+		try{
+			setCurrentDate();
+		}catch(Exception e){
+			Log.e(TAG, "ERROR Unable to pick date: ", e);
+		}
+		imgExpCalendar.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				DialogFragment picker = new DatePickerFragment();
+				picker.show(getFragmentManager(), "datePicker");
+			}
+		});
 		btnCancelNewExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -152,7 +177,7 @@ public class NewExpenseFragment extends Fragment {
 				} else {
 					// save the new income to db
 					DB db = new DB(getActivity(), null);
-					db.saveNewExpense(new MExpense(getDate(), expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved));
+					db.saveNewExpense(new MExpense(dateToBeSaved, expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved));
 					
 					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
 					buttonHolder.setVisibility(View.VISIBLE);
@@ -165,7 +190,6 @@ public class NewExpenseFragment extends Fragment {
 				}
 			}
 		});
-
 		/*
 		 * Get expense type
 		 */
@@ -208,8 +232,6 @@ public class NewExpenseFragment extends Fragment {
 				expensePaymentTypeToBeSaved = (String) radioBankExpense.getText();
 			}
 		});
-
-
 		/*
 		 * Get Income amount
 		 */
@@ -228,7 +250,6 @@ public class NewExpenseFragment extends Fragment {
 				return false;
 			}
 		});
-		
 		txtAmountToBeSaved.addTextChangedListener(new TextWatcher() {
 			DecimalFormat dec = new DecimalFormat("0.00");
 			
@@ -256,7 +277,6 @@ public class NewExpenseFragment extends Fragment {
 				//txtNewIncomeAmount.setBackgroundResource(R.drawable.edittext_login_box_border);
 			}
 		});
-		
 		/*
 		 * Get Note
 		 */
@@ -268,13 +288,6 @@ public class NewExpenseFragment extends Fragment {
 		});
 		return view;
 	}
-	
-	private String getDate() {
-		DateFormat df = new SimpleDateFormat("dd MM yyyy, HH:mm");
-		String date = df.format(Calendar.getInstance().getTime());
-		return date;
-	}
-	
 	
 	private void showNoteDialog() {
 		FragmentManager fm = getFragmentManager();
@@ -362,19 +375,78 @@ public class NewExpenseFragment extends Fragment {
 		super.onDetach();
 		mListener = null;
 	}
-
-/**
- * This interface must be implemented by activities that contain this
- * fragment to allow an interaction in this fragment to be communicated
- * to the activity and potentially other fragments contained in that
- * activity.
- * <p>
- * See the Android Training lesson <a href=
- * "http://developer.android.com/training/basics/fragments/communicating.html"
- * >Communicating with Other Fragments</a> for more information.
- */
-public interface OnFragmentInteractionListener {
-	// TODO: Update argument type and name
-	void onFragmentInteraction(Uri uri);
-}
+	
+	/**
+	 * This interface must be implemented by activities that contain this
+	 * fragment to allow an interaction in this fragment to be communicated
+	 * to the activity and potentially other fragments contained in that
+	 * activity.
+	 * <p>
+	 * See the Android Training lesson <a href=
+	 * "http://developer.android.com/training/basics/fragments/communicating.html"
+	 * >Communicating with Other Fragments</a> for more information.
+	 */
+	public interface OnFragmentInteractionListener {
+		// TODO: Update argument type and name
+		void onFragmentInteraction(Uri uri);
+	}
+	
+	/**
+	 * Sets the current date.
+	 */
+	private void setCurrentDate() {
+		final Calendar c = Calendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		c.set(year, month, day);
+		
+		sdf = new SimpleDateFormat("d MMM", Locale.ENGLISH);
+		sdfDB = new SimpleDateFormat("dd MM yyyy, HH:mm", Locale.ENGLISH);
+		
+		dateToDisplay = sdf.format(c.getTime());
+		dateToBeSaved = sdfDB.format(c.getTime());
+		txtCurDate.setText(dateToDisplay);
+	}
+	
+	/**
+	 * The Class DatePickerFragment.
+	 */
+	public static class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+		
+		
+		/* (non-Javadoc)
+				 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+				 */
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Use the current date as the default date in the picker
+			final Calendar c = Calendar.getInstance();
+			int year = c.get(Calendar.YEAR);
+			int month = c.get(Calendar.MONTH);
+			int day = c.get(Calendar.DAY_OF_MONTH);
+			
+			// Create a new instance of DatePickerDialog and return it
+			return new DatePickerDialog(getActivity(), this, year, month, day);
+		}
+		
+		/* (non-Javadoc)
+		 * @see android.app.DatePickerDialog.OnDateSetListener#onDateSet(android.widget.DatePicker, int, int, int)
+		 */
+		@Override
+		public void onDateSet(DatePicker view, int year, int month, int day) {
+			Calendar c = Calendar.getInstance();
+			int y = c.get(Calendar.YEAR);
+			// setting current year, preventing the
+			// user to pickup different year
+			c.set(y, month, day);
+			
+			sdf = new SimpleDateFormat("d MMM", Locale.ENGLISH);
+			sdfDB = new SimpleDateFormat("dd MM yyyy, HH:mm", Locale.ENGLISH);
+			
+			dateToDisplay = sdf.format(c.getTime());
+			dateToBeSaved = sdfDB.format(c.getTime());
+			txtCurDate.setText(dateToDisplay);
+		}
+	}
 }

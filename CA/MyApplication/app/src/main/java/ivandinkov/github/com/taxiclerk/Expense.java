@@ -110,4 +110,5 @@ public class Expense {
 	public void setActive(String active){
 		this._active = active;
 	}
+	
 }
