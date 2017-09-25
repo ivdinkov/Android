@@ -36,7 +36,8 @@ public class MainActivity extends AppCompatActivity
 				NewIncomeFragment.OnFragmentInteractionListener,
 				NewExpenseFragment.OnFragmentInteractionListener,
 				JobProviderFragment.OnFragmentInteractionListener,
-				ExpenseAddFragment.OnFragmentInteractionListener
+				ExpenseAddFragment.OnFragmentInteractionListener,
+				TrainFragment.OnFragmentInteractionListener
 
 {
 	private static final String TAG = "TC";
@@ -156,6 +157,14 @@ public class MainActivity extends AppCompatActivity
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 6:
+				// Hide buttons to make space for settings fragment
+				btnHolder.setVisibility(View.GONE);
+				// Show Settings
+				fragment = new TrainFragment();
+				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+				ft.replace(R.id.main_fragment_container, fragment, "train").commit();
+				break;
+			case 7:
 				// Sign Out App
 				firebaseAuth.signOut();
 				break;
@@ -225,10 +234,10 @@ public class MainActivity extends AppCompatActivity
 			displayView(4);
 		} else if (id == R.id.nav_settings) {
 			displayView(5);
+		} else if (id == R.id.nav_trains) {
+			displayView(6);
 		} else if (id == R.id.nav_logout) {
-			displayView(7);
-		} else if (id == R.id.nav_share) {
-			
+			displayView(6);
 		} else if (id == R.id.nav_send) {
 			
 		}

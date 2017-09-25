@@ -83,6 +83,9 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_INC_AMOUNT + " TEXT,"
 					+ KEY_INC_NOTES + " TEXT,"
 					+ KEY_INC_PROVIDER + " TEXT)";
+	
+	
+	
 	private Cursor cursor;
 	
 	
