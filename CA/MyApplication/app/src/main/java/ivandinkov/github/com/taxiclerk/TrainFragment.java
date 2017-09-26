@@ -20,9 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
@@ -44,6 +47,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -83,8 +87,9 @@ public class TrainFragment extends Fragment {
 	private OnFragmentInteractionListener mListener;
 	private Button btnShowTrain;
 	private String queryUrl;
-	// We don't use namespaces
-	private static final String ns = null;
+	private HashMap<Object, Object> currentMap;
+	private ResultCallBack callback;
+	private ListView listVieTrain;
 	
 	
 	/**
@@ -95,7 +100,7 @@ public class TrainFragment extends Fragment {
 	 * @param param2 Parameter 2.
 	 * @return A new instance of fragment TrainFragment.
 	 */
-	public static TrainFragment newInstance(String param1, String param2) {
+	public static TrainFragment newInstance(String param1, String param2){
 		TrainFragment fragment = new TrainFragment();
 		Bundle args = new Bundle();
 		args.putString(ARG_PARAM1, param1);
@@ -127,7 +132,7 @@ public class TrainFragment extends Fragment {
 		final String[] stationValues = getResources().getStringArray(R.array.stations);
 		final String[] minuteValues = getResources().getStringArray(R.array.minutes);
 		final String[] stationCodes = getResources().getStringArray(R.array.stations_codes);
-		
+
 		
 		// handle the button showTrains
 		btnShowTrain = (Button) view.findViewById(R.id.btnShowTrain);
@@ -145,7 +150,7 @@ public class TrainFragment extends Fragment {
 					Log.i(TAG, "Build URL: " + queryUrl);
 					
 					// fire xml
-					IrishRail showTrains = new IrishRail();
+					IrishRail showTrains = new IrishRail(callback);
 					showTrains.execute();
 				}
 			}
@@ -235,6 +240,7 @@ public class TrainFragment extends Fragment {
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
+		//callback = (ResultCallBack) getActivity();
 		if (context instanceof OnFragmentInteractionListener) {
 			mListener = (OnFragmentInteractionListener) context;
 		} else {
@@ -261,27 +267,54 @@ public class TrainFragment extends Fragment {
 	 * >Communicating with Other Fragments</a> for more information.
 	 */
 	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
+		
 		void onFragmentInteraction(Uri uri);
 	}
 	
-	public class IrishRail extends AsyncTask<Void, Void, Void> {
+	public class IrishRail extends AsyncTask<Void, Void, ArrayList<HashMap<String, String>>> {
 		
-		protected Void doInBackground(Void... params) {
+		private ProgressDialog pDialog;
+		ResultCallBack callBack = null;
+		
+		public IrishRail(ResultCallBack callBack){
+			this.callBack = callBack;
+		}
+		public void onAttach(){
+			this.callBack = callBack;
+		}
+		public void onDeAttach(ResultCallBack callBack){
+			callBack = null;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pDialog = new ProgressDialog(getActivity());
+			pDialog.setTitle("Get IrishRail Info");
+			pDialog.setMessage("Loading...");
+			pDialog.show();
+		}
+		
+		protected ArrayList<HashMap<String, String>> doInBackground(Void... params) {
 			
+			ArrayList<HashMap<String, String>> result = new ArrayList<>();
 			try {
 				URL url = new URL(queryUrl);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("GET");
 				InputStream inputStream = connection.getInputStream();
-				processXML(inputStream);
+				result = processXML(inputStream);
 			} catch (Exception e) {
 				Log.i(TAG, e.getMessage());
 			}
-			return null;
+			return result;
+		}
+		protected void onPostExecute(ArrayList<HashMap<String, String>> result){
+			pDialog.dismiss();
+			
 		}
 		
-		public void processXML(InputStream inputStream) throws Exception {
+		public ArrayList<HashMap<String, String>> processXML(InputStream inputStream) throws Exception {
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document xmlDocument = documentBuilder.parse(inputStream);
@@ -293,32 +326,102 @@ public class TrainFragment extends Fragment {
 			Node currentChild = null;
 			
 			// Number of trains
+			ArrayList<HashMap<String, String>> result = new ArrayList<>();
+			HashMap<String, String> currentMap;
 			for (int i = 0; i < itemsList.getLength(); i++) {
 				
 				Log.i(TAG, "Number of trains: " + String.valueOf(itemsList.getLength()));
 				currentItem = itemsList.item(i);
 				itemChildren = currentItem.getChildNodes();
-				
+				currentMap = new HashMap<>();
 				for (int j = 0; j < itemChildren.getLength(); j++) {
 					currentChild = itemChildren.item(j);
-					if(currentChild.getNodeName().equalsIgnoreCase("Origin")){
-						Log.i(TAG, currentChild.getTextContent());
+					if (currentChild.getNodeName().equalsIgnoreCase("Origin")) {
+						//Log.i(TAG, currentChild.getTextContent());
+						currentMap.put("origin", currentChild.getTextContent());
 					}
-					if(currentChild.getNodeName().equalsIgnoreCase("Destination")){
-						Log.i(TAG, currentChild.getTextContent());
+					if (currentChild.getNodeName().equalsIgnoreCase("Destination")) {
+						//Log.i(TAG, currentChild.getTextContent());
+						currentMap.put("destination", currentChild.getTextContent());
 					}
-					if(currentChild.getNodeName().equalsIgnoreCase("Late")){
-						Log.i(TAG, currentChild.getTextContent());
+					if (currentChild.getNodeName().equalsIgnoreCase("Late")) {
+						//Log.i(TAG, currentChild.getTextContent());
+						currentMap.put("late", currentChild.getTextContent());
 					}
-					if(currentChild.getNodeName().equalsIgnoreCase("Exparrival")){
-						Log.i(TAG, currentChild.getTextContent());
+					if (currentChild.getNodeName().equalsIgnoreCase("Exparrival")) {
+						//Log.i(TAG, currentChild.getTextContent());
+						currentMap.put("arrival", currentChild.getTextContent());
+					}
+					
+					if (currentMap != null && !currentMap.isEmpty()) {
+						result.add(currentMap);
 					}
 				}
 			}
+			return result;
 		}
 	}
 } // End Fragment
-
-    
+interface ResultCallBack{
+	void onPreExecute();
+	void onPostExecute();
+}
+class MyAdapter extends BaseAdapter{
+	ArrayList<HashMap<String,String>> dataSource = new ArrayList<>();
+	Context context;
+	LayoutInflater layoutInflater;
+	
+	
+	public MyAdapter(Context context,ArrayList<HashMap<String,String>> dataSource){
+		this.dataSource = dataSource;
+		context = context;
+		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	}
+	@Override
+	public int getCount() {
+		return dataSource.size();
+	}
+	
+	@Override
+	public Object getItem(int position) {
+		return dataSource.get(position);
+	}
+	
+	@Override
+	public long getItemId(int position) {
+		return position;
+	}
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		View row = convertView;
+		MyHolder myHolder = null;
+		if(row == null){
+			row = layoutInflater.inflate(R.layout.single_train,parent,false);
+			myHolder = new MyHolder(row);
+			row.setTag(myHolder);
+		}else{
+			myHolder = (MyHolder) row.getTag();
+		}
+		HashMap<String,String> currentItem = dataSource.get(position);
+		myHolder.txtFrom.setText(currentItem.get("origin"));
+		myHolder.txtTo.setText(currentItem.get("destination"));
+		myHolder.txtDelay.setText(currentItem.get("late"));
+		myHolder.txtTime.setText(currentItem.get("arrival"));
+		return null;
+	}
+}
+class MyHolder{
+	TextView txtFrom;
+	TextView txtTo;
+	TextView txtTime;
+	TextView txtDelay;
+	public MyHolder(View view){
+		txtFrom = (TextView) view.findViewById(R.id.txtFrom);
+		txtTo = (TextView) view.findViewById(R.id.txtTo);
+		txtTime = (TextView) view.findViewById(R.id.txtTime);
+		txtDelay = (TextView) view.findViewById(R.id.txtDelay);
+	}
+}
 
 
