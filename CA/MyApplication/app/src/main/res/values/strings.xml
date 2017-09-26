@@ -51,17 +51,22 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string-array name="stations">
-        <item>Heuston</item>
-        <item>Connoly</item>
         <item>Pearse</item>
+        <item>Tara</item>
+        <item>Connoly</item>
+    </string-array>
+    <string-array name="stations_codes">
+        <item>PERSE</item>
+        <item>TARA</item>
+        <item>CNLLY</item>
     </string-array>
     <string-array name="minutes">
+        <item>15</item>
         <item>30</item>
         <item>45</item>
         <item>60</item>
         <item>90</item>
     </string-array>
-
 
 
 </resources>

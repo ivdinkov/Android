@@ -24,22 +24,22 @@
             <Spinner
                 android:id="@+id/spinnerStation"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="@dimen/ten_dp"
-                android:layout_weight="40"/>
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/fivedp"
+                android:layout_weight="30"/>
 
             <Spinner
                 android:id="@+id/spinnerTime"
                 android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="@dimen/ten_dp"
-                android:layout_weight="20"/>
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/fivedp"
+                android:layout_weight="30"/>
             <Button
                 android:id="@+id/btnShowTrain"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/ten_dp"
-                android:layout_weight="30"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/fivedp"
+                android:layout_weight="20"
                 android:textSize="15sp"
                 android:text="Show"/>
         </LinearLayout>

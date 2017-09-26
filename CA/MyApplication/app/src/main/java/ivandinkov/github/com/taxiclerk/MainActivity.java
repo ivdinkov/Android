@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity
 				JobProviderFragment.OnFragmentInteractionListener,
 				ExpenseAddFragment.OnFragmentInteractionListener,
 				TrainFragment.OnFragmentInteractionListener
+			
 
 {
 	private static final String TAG = "TC";
@@ -157,31 +158,33 @@ public class MainActivity extends AppCompatActivity
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 6:
-				// Hide buttons to make space for settings fragment
 				btnHolder.setVisibility(View.GONE);
-				// Show Settings
+				// Show train fragment
 				fragment = new TrainFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-				ft.replace(R.id.main_fragment_container, fragment, "train").commit();
+				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 7:
 				// Sign Out App
+				finish();
 				firebaseAuth.signOut();
+ 				startActivity(new Intent(MainActivity.this,LoginActivity.class));
+				
 				break;
 			
 			default:
 				break;
 		}
 		
-		if (fragment != null) {
-			FragmentManager fragmentManager = getSupportFragmentManager();
-			fragmentManager.beginTransaction().replace(R.id.main_fragment_container,
-							fragment).commit();
-			
-		} else {
-			finish();
-			startActivity(new Intent(MainActivity.this,LoginActivity.class));
-		}
+//		if (fragment != null) {
+//			FragmentManager fragmentManager = getSupportFragmentManager();
+//			fragmentManager.beginTransaction().replace(R.id.main_fragment_container,
+//							fragment).commit();
+//
+//		} else {
+//			finish();
+//			startActivity(new Intent(MainActivity.this,LoginActivity.class));
+//		}
 	}
 	@Override
 	public void onBackPressed() {
@@ -237,7 +240,7 @@ public class MainActivity extends AppCompatActivity
 		} else if (id == R.id.nav_trains) {
 			displayView(6);
 		} else if (id == R.id.nav_logout) {
-			displayView(6);
+			displayView(7);
 		} else if (id == R.id.nav_send) {
 			
 		}

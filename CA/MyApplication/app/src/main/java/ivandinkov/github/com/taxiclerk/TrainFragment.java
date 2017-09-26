@@ -1,27 +1,56 @@
 package ivandinkov.github.com.taxiclerk;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.ObbInfo;
+import android.content.res.XmlResourceParser;
+import android.icu.util.RangeValueIterator;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.Context.CONNECTIVITY_SERVICE;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -33,26 +62,30 @@ import static android.content.Context.CONNECTIVITY_SERVICE;
  * create an instance of this fragment.
  */
 public class TrainFragment extends Fragment {
-	
-	
+	private static String ARG_PARAM1;
+	private static String ARG_PARAM2;
+	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private DisplayMetrics dm;
 	private Spinner spinnerStation;
 	private Spinner spinnerTime;
-	private String selectedStation;
-	private String selectedTime;
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private static final String ARG_PARAM1 = "param1";
-	private static final String ARG_PARAM2 = "param2";
+	private String selectedStation = "CNLLY";
+	private String selectedTime = "15";
+	private String server_url = "";
+	private static final String TAG = "TC";
 	
-	// TODO: Rename and change types of parameters
 	private String mParam1;
 	private String mParam2;
 	
+	public static final String SERVER_URL = "http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML_WithNumMins";
+	public static final String QUERY_OPTIONS_STATION = "?StationCode=";
+	public static final String QUERY_OPTIONS_TIME = "&NumMins=";
+	public static final String TEXT = "";
 	private OnFragmentInteractionListener mListener;
+	private Button btnShowTrain;
+	private String queryUrl;
+	// We don't use namespaces
+	private static final String ns = null;
 	
-	public TrainFragment() {
-		// Required empty public constructor
-	}
 	
 	/**
 	 * Use this factory method to create a new instance of
@@ -62,7 +95,6 @@ public class TrainFragment extends Fragment {
 	 * @param param2 Parameter 2.
 	 * @return A new instance of fragment TrainFragment.
 	 */
-	// TODO: Rename and change types and number of parameters
 	public static TrainFragment newInstance(String param1, String param2) {
 		TrainFragment fragment = new TrainFragment();
 		Bundle args = new Bundle();
@@ -70,6 +102,10 @@ public class TrainFragment extends Fragment {
 		args.putString(ARG_PARAM2, param2);
 		fragment.setArguments(args);
 		return fragment;
+	}
+	
+	public TrainFragment() {
+		// Required empty public constructor
 	}
 	
 	@Override
@@ -88,6 +124,35 @@ public class TrainFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_train, container, false);
 		
 		
+		final String[] stationValues = getResources().getStringArray(R.array.stations);
+		final String[] minuteValues = getResources().getStringArray(R.array.minutes);
+		final String[] stationCodes = getResources().getStringArray(R.array.stations_codes);
+		
+		
+		// handle the button showTrains
+		btnShowTrain = (Button) view.findViewById(R.id.btnShowTrain);
+		btnShowTrain.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// check first for internet connection
+				if (!checkConnection()) {
+					Toast toast = Toast.makeText(getActivity(), "No connection!", Toast.LENGTH_LONG);
+					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+					toast.show();
+				} else {
+					// initialise xml params
+					queryUrl = buildUrl(SERVER_URL, QUERY_OPTIONS_STATION, QUERY_OPTIONS_TIME, selectedStation, selectedTime);
+					Log.i(TAG, "Build URL: " + queryUrl);
+					
+					// fire xml
+					IrishRail showTrains = new IrishRail();
+					showTrains.execute();
+				}
+			}
+		});
+		
+		
+		// shrink width with wraper
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.trainWraper);
 		// Get device dimensions
 		dm = getWidthAndHeightPx();
@@ -95,7 +160,6 @@ public class TrainFragment extends Fragment {
 		LinearLayout.LayoutParams lpWrapper = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.9)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.9)) / 2;
-		
 		
 		// Spinners
 		spinnerStation = (Spinner) view.findViewById(R.id.spinnerStation);
@@ -110,46 +174,58 @@ public class TrainFragment extends Fragment {
 		adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinnerTime.setAdapter(adapterTime);
 		
-		
 		spinnerStation.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				
+				selectedStation = stationCodes[position];
 			}
 			
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				
 			}
 		});
 		
 		spinnerTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				
+				selectedTime = minuteValues[position];
 			}
 			
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				
 			}
 		});
-		
-		
-		if (!checkConnection()) {
-			Toast toast = Toast.makeText(getActivity(), "No connection!", Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.TOP, 0, 0);
-			toast.show();
-		} else {
-			
-		}
 		
 		
 		return view;
 	}
 	
+	private String buildUrl(String serverUrl, String queryOptionsStation, String queryOptionsTime, String selectedStation, String selectedTime) {
+		
+		return serverUrl + queryOptionsStation + selectedStation + queryOptionsTime + selectedTime;
+	}
 	
-	// TODO: Rename method, update argument and hook method into UI event
+	
+	private DisplayMetrics getWidthAndHeightPx() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm;
+	}
+	
+	/**
+	 * Check for internet connection.
+	 *
+	 * @return the boolean
+	 */
+	private Boolean checkConnection() {
+		ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(getActivity().CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+		if (activeNetwork != null) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void onButtonPressed(Uri uri) {
 		if (mListener != null) {
 			mListener.onFragmentInteraction(uri);
@@ -173,6 +249,7 @@ public class TrainFragment extends Fragment {
 		mListener = null;
 	}
 	
+	
 	/**
 	 * This interface must be implemented by activities that contain this
 	 * fragment to allow an interaction in this fragment to be communicated
@@ -188,25 +265,60 @@ public class TrainFragment extends Fragment {
 		void onFragmentInteraction(Uri uri);
 	}
 	
-	private DisplayMetrics getWidthAndHeightPx() {
-		DisplayMetrics dm = new DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-		return dm;
-	}
-	/**
-	 * Check for internet connection.
-	 *
-	 * @return the boolean
-	 */
-	private Boolean checkConnection() {
-		ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(CONNECTIVITY_SERVICE);
-		NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
-		if (activeNetwork != null) {
-			return true;
+	public class IrishRail extends AsyncTask<Void, Void, Void> {
+		
+		protected Void doInBackground(Void... params) {
+			
+			try {
+				URL url = new URL(queryUrl);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod("GET");
+				InputStream inputStream = connection.getInputStream();
+				processXML(inputStream);
+			} catch (Exception e) {
+				Log.i(TAG, e.getMessage());
+			}
+			return null;
 		}
-		return false;
+		
+		public void processXML(InputStream inputStream) throws Exception {
+			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+			Document xmlDocument = documentBuilder.parse(inputStream);
+			Element rootElement = xmlDocument.getDocumentElement();
+			NodeList itemsList = rootElement.getElementsByTagName("objStationData");
+			
+			Node currentItem = null;
+			NodeList itemChildren = null;
+			Node currentChild = null;
+			
+			// Number of trains
+			for (int i = 0; i < itemsList.getLength(); i++) {
+				
+				Log.i(TAG, "Number of trains: " + String.valueOf(itemsList.getLength()));
+				currentItem = itemsList.item(i);
+				itemChildren = currentItem.getChildNodes();
+				
+				for (int j = 0; j < itemChildren.getLength(); j++) {
+					currentChild = itemChildren.item(j);
+					if(currentChild.getNodeName().equalsIgnoreCase("Origin")){
+						Log.i(TAG, currentChild.getTextContent());
+					}
+					if(currentChild.getNodeName().equalsIgnoreCase("Destination")){
+						Log.i(TAG, currentChild.getTextContent());
+					}
+					if(currentChild.getNodeName().equalsIgnoreCase("Late")){
+						Log.i(TAG, currentChild.getTextContent());
+					}
+					if(currentChild.getNodeName().equalsIgnoreCase("Exparrival")){
+						Log.i(TAG, currentChild.getTextContent());
+					}
+				}
+			}
+		}
 	}
-	
-	
-	
-}
+} // End Fragment
+
+    
+
+
