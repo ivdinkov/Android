@@ -2,9 +2,6 @@ package ivandinkov.github.com.taxiclerk;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.ObbInfo;
-import android.content.res.XmlResourceParser;
-import android.icu.util.RangeValueIterator;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -13,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.Xml;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,33 +24,19 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 
 /**
@@ -65,7 +47,7 @@ import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
  * Use the {@link TrainFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TrainFragment extends Fragment {
+public class TrainFragment extends Fragment implements ResultCallBack{
 	private static String ARG_PARAM1;
 	private static String ARG_PARAM2;
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,7 +71,7 @@ public class TrainFragment extends Fragment {
 	private String queryUrl;
 	private HashMap<Object, Object> currentMap;
 	private ResultCallBack callback;
-	private ListView listVieTrain;
+	private ListView listT;
 	
 	
 	/**
@@ -132,7 +114,7 @@ public class TrainFragment extends Fragment {
 		final String[] stationValues = getResources().getStringArray(R.array.stations);
 		final String[] minuteValues = getResources().getStringArray(R.array.minutes);
 		final String[] stationCodes = getResources().getStringArray(R.array.stations_codes);
-
+		listT = (ListView) view.findViewById(R.id.listT);
 		
 		// handle the button showTrains
 		btnShowTrain = (Button) view.findViewById(R.id.btnShowTrain);
@@ -255,6 +237,15 @@ public class TrainFragment extends Fragment {
 		mListener = null;
 	}
 	
+	@Override
+	public void onPreExecute() {
+		
+	}
+	
+	@Override
+	public void onPostExecute(ArrayList<HashMap<String, String>> result) {
+		listT.setAdapter(new TainDisplayAdapater(getContext(),result));
+	}
 	
 	/**
 	 * This interface must be implemented by activities that contain this
@@ -276,8 +267,9 @@ public class TrainFragment extends Fragment {
 		private ProgressDialog pDialog;
 		ResultCallBack callBack = null;
 		
-		public IrishRail(ResultCallBack callBack){
-			this.callBack = callBack;
+		public IrishRail(ResultCallBack call){
+			
+			this.callBack = call;
 		}
 		public void onAttach(){
 			this.callBack = callBack;
@@ -293,6 +285,9 @@ public class TrainFragment extends Fragment {
 			pDialog.setTitle("Get IrishRail Info");
 			pDialog.setMessage("Loading...");
 			pDialog.show();
+			if(callBack != null){
+				callBack.onPreExecute();
+			}
 		}
 		
 		protected ArrayList<HashMap<String, String>> doInBackground(Void... params) {
@@ -311,6 +306,10 @@ public class TrainFragment extends Fragment {
 		}
 		protected void onPostExecute(ArrayList<HashMap<String, String>> result){
 			pDialog.dismiss();
+			listT.setAdapter(new TainDisplayAdapater(getContext(),result));
+			if(callBack != null){
+				callBack.onPreExecute();
+			}
 			
 		}
 		
@@ -364,64 +363,21 @@ public class TrainFragment extends Fragment {
 } // End Fragment
 interface ResultCallBack{
 	void onPreExecute();
-	void onPostExecute();
+	void onPostExecute(ArrayList<HashMap<String, String>> result);
 }
-class MyAdapter extends BaseAdapter{
-	ArrayList<HashMap<String,String>> dataSource = new ArrayList<>();
-	Context context;
-	LayoutInflater layoutInflater;
-	
-	
-	public MyAdapter(Context context,ArrayList<HashMap<String,String>> dataSource){
-		this.dataSource = dataSource;
-		context = context;
-		layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-	}
-	@Override
-	public int getCount() {
-		return dataSource.size();
-	}
-	
-	@Override
-	public Object getItem(int position) {
-		return dataSource.get(position);
-	}
-	
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-	
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View row = convertView;
-		MyHolder myHolder = null;
-		if(row == null){
-			row = layoutInflater.inflate(R.layout.single_train,parent,false);
-			myHolder = new MyHolder(row);
-			row.setTag(myHolder);
-		}else{
-			myHolder = (MyHolder) row.getTag();
-		}
-		HashMap<String,String> currentItem = dataSource.get(position);
-		myHolder.txtFrom.setText(currentItem.get("origin"));
-		myHolder.txtTo.setText(currentItem.get("destination"));
-		myHolder.txtDelay.setText(currentItem.get("late"));
-		myHolder.txtTime.setText(currentItem.get("arrival"));
-		return null;
-	}
-}
-class MyHolder{
-	TextView txtFrom;
-	TextView txtTo;
-	TextView txtTime;
-	TextView txtDelay;
-	public MyHolder(View view){
-		txtFrom = (TextView) view.findViewById(R.id.txtFrom);
-		txtTo = (TextView) view.findViewById(R.id.txtTo);
-		txtTime = (TextView) view.findViewById(R.id.txtTime);
-		txtDelay = (TextView) view.findViewById(R.id.txtDelay);
-	}
-}
-
+//class TrainDisplayAdapter1 extends BaseAdapter{
+//}
+//class MyHolder{
+//	TextView txtFrom;
+//	TextView txtTo;
+//	TextView txtTime;
+//	TextView txtDelay;
+//	public MyHolder(View view){
+//		txtFrom = (TextView) view.findViewById(R.id.txtFrom);
+//		txtTo = (TextView) view.findViewById(R.id.txtTo);
+//		txtTime = (TextView) view.findViewById(R.id.txtTime);
+//		txtDelay = (TextView) view.findViewById(R.id.txtDelay);
+//	}
+//}
+//
 

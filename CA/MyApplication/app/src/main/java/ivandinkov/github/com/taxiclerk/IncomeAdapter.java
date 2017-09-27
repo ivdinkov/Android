@@ -28,7 +28,7 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 	public interface UpdateRecord {
 		void onRecordSelectUpdate(int recordID, int flag);
 	}
-	
+//
 //	public IncomeAdapter(Activity context, ArrayList<Income> list, UpdateRecord updateCallback) {
 //		super(context, R.layout.single_income_record, list);
 //		this.mContext = context;
@@ -114,6 +114,7 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 		} else {
 			view = convertView;
 		}
+		
 		ViewHolder holder = (ViewHolder) view.getTag();
 		holder.income_id.setText(String.valueOf(list.get(position).getID()));
 		holder.income_date.setText(list.get(position).getDate());
