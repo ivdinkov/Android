@@ -7,11 +7,11 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
@@ -24,7 +24,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,7 +44,6 @@ public class RegisterActivity extends AppCompatActivity {
 	Button btnRegister;
 	private ProgressDialog progressDialog;
 	private FirebaseAuth firebaseAuth;
-	private TextView textViewLogin;
 	private LinearLayout lnrViewSlide;
 	
 	
@@ -65,7 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
 		txtPassword = (EditText) findViewById(R.id.txtPassword);
 		txtSign = (TextView) findViewById(R.id.txtViewSign);
 		btnRegister = (Button) findViewById(R.id.btnRegister);
-		textViewLogin = (TextView) findViewById(R.id.txtViewSign);
+		TextView textViewLogin = (TextView) findViewById(R.id.txtViewSign);
 		lnrViewSlide = (LinearLayout) findViewById(R.id.register_slide);
 		
 		// Get device dimensions

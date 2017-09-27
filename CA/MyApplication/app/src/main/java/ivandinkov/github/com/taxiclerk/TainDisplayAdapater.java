@@ -14,10 +14,10 @@ import java.util.HashMap;
  * Created by iv on 27/09/2017.
  */
 
-public class TainDisplayAdapater extends BaseAdapter{
-	ArrayList<HashMap<String,String>> dataSource = new ArrayList<>();
-	Context mContext;
-	LayoutInflater layoutInflater;
+class TainDisplayAdapater extends BaseAdapter{
+	private ArrayList<HashMap<String,String>> dataSource = new ArrayList<>();
+	private Context mContext;
+	private LayoutInflater layoutInflater;
 	
 	public TainDisplayAdapater(Context context, ArrayList<HashMap<String,String>> dataSource){
 		this.dataSource = dataSource;

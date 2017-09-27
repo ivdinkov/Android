@@ -6,17 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import android.view.Gravity;
-import android.widget.Toast;
 
+import java.sql.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by iv on 06/09/2017.
  */
 
-public class DB extends SQLiteOpenHelper {
+class DB extends SQLiteOpenHelper {
 	
 	
 	/** The Constant DATABASE_VERSION. */
@@ -57,6 +55,7 @@ public class DB extends SQLiteOpenHelper {
 	private static final String KEY_EXP_AMOUNT = "expense_amount";
 	private static final String KEY_EXP_NOTES = "expense_notes";
 	private static final String KEY_EXP_PROVIDER = "expense_type";
+	private static final String KEY_EXP_IMG = "expense_img";
 	/** The Constant CREATE_EXPENSE_TABLE. */
 	private static final String CREATE_EXPENSE_TABLE = "CREATE TABLE IF NOT EXISTS "
 					+ TABLE_EXPENSE
@@ -65,6 +64,7 @@ public class DB extends SQLiteOpenHelper {
 					+ KEY_EXP_PAYMENT_TYPE + " TEXT,"
 					+ KEY_EXP_AMOUNT + " TEXT,"
 					+ KEY_EXP_NOTES + " TEXT,"
+					+ KEY_EXP_IMG + " TEXT,"
 					+ KEY_EXP_PROVIDER + " TEXT)";
 	
 	private static final String TABLE_INCOME = "income";
@@ -392,6 +392,7 @@ public class DB extends SQLiteOpenHelper {
 		values.put(KEY_EXP_AMOUNT, expense.getAmount());
 		values.put(KEY_EXP_PROVIDER, expense.getExpenseType());
 		values.put(KEY_EXP_NOTES, expense.getNote());
+		values.put(KEY_EXP_IMG, expense.getImage());
 		
 		
 		// Inserting Row
@@ -416,7 +417,8 @@ public class DB extends SQLiteOpenHelper {
 						+ KEY_EXP_PAYMENT_TYPE + ","
 						+ KEY_EXP_AMOUNT + ","
 						+ KEY_EXP_PROVIDER + ","
-						+ KEY_EXP_NOTES + " FROM "
+						+ KEY_EXP_NOTES + ","
+						+ KEY_EXP_IMG + " FROM "
 						+ TABLE_EXPENSE + " ORDER BY "
 						+ KEY_ID_EXPENSE;
 		
@@ -438,6 +440,7 @@ public class DB extends SQLiteOpenHelper {
 				exp.setAmount(cursor.getString(3));
 				exp.setExpenseType(cursor.getString(4));
 				exp.setNote(cursor.getString(5));
+				exp.setImage(cursor.getString(6));
 				// Adding contact to list
 				expenseList.add(exp);
 			} while (cursor.moveToNext());
@@ -446,5 +449,66 @@ public class DB extends SQLiteOpenHelper {
 		// return income list
 		return expenseList;
 	}
+	
+	/**
+	 *
+	 * Reports
+	 *
+	 */
+	public String getDayAmount(String date,String type) {
+		String cashTotal = "";
+		SQLiteDatabase db = this.getReadableDatabase();
+		String sql = "SELECT SUM(CAST(" + KEY_INC_AMOUNT + " as DECIMAL(9,2))) FROM " + TABLE_INCOME
+						+ " WHERE " + KEY_INC_TYPE + " LIKE '" + type + "' AND " + KEY_INC_DATE + " LIKE '%" + date + "%'";
+		Log.i(TAG,sql);
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+			do {
+				cashTotal = String.valueOf(cursor.getDouble(0));
+				Log.i(TAG,cashTotal);
+			} while (cursor.moveToNext());
+		}
+		db.close();
+		cursor.close();
+		return cashTotal;
+	}
+	public String getDailyExp(String date) {
+		String total = "";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		String sql = "SELECT SUM(CAST(" + KEY_EXP_AMOUNT + " as DECIMAL(9,2))) FROM " + TABLE_EXPENSE
+						+ " WHERE " + date + " LIKE '%" + date + "%'";
+		
+		Log.i(TAG,sql);
+		Cursor cursor = db.rawQuery(sql, null);
+		if (cursor.moveToFirst()) {
+			do {
+				total = String.valueOf(cursor.getDouble(0));
+				Log.i(TAG,total);
+			} while (cursor.moveToNext());
+		}
+		db.close();
+		cursor.close();
+		return total;
+	}
+
+//	public String getTest(String date) {
+//		String cashTotal = "";
+//		SQLiteDatabase db = this.getReadableDatabase();
+//		String sql = "SELECT " + KEY_INC_DATE + " FROM " + TABLE_INCOME
+//						+ " WHERE " + KEY_INC_TYPE + " LIKE 'cash' AND " + KEY_INC_DATE + " LIKE '" + date + "'";
+//		Log.i(TAG,sql);
+//		Cursor cursor = db.rawQuery(sql, null);
+//		if (cursor.moveToFirst()) {
+//			do {
+//				cashTotal = String.valueOf(cursor.getDouble(0));
+//				Log.i(TAG,cashTotal);
+//			} while (cursor.moveToNext());
+//		}
+//		db.close();
+//		cursor.close();
+//		return cashTotal;
+//	}
+//
 	
 }

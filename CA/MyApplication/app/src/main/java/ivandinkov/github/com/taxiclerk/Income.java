@@ -4,29 +4,29 @@ package ivandinkov.github.com.taxiclerk;
  * Created by iv on 24/09/2017.
  */
 
-public class Income {
+class Income {
 	
 	// private variables
 	/** The _id. */
-	int _id;
+	private int _id;
 	
 	/** The _amount. */
-	String _amount;
+	private String _amount;
 	
 	/** The _date. */
-	String _date;
+	private String _date;
 	
 	/** The _note. */
-	String _note;
+	private String _note;
 	
 	/** The _active. */
 	String _active;
 	
 	/** The _pay_type. */
-	String _type;
+	private String _type;
 	
 	/** The _provider. */
-	String _provider;
+	private String _provider;
 	
 	// Empty constructor
 	/**

@@ -16,12 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.w3c.dom.Document;
@@ -50,24 +48,16 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class TrainFragment extends Fragment implements ResultCallBack{
 	private static String ARG_PARAM1;
 	private static String ARG_PARAM2;
-	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-	private DisplayMetrics dm;
-	private Spinner spinnerStation;
-	private Spinner spinnerTime;
 	private String selectedStation = "CNLLY";
 	private String selectedTime = "15";
 	private String server_url = "";
 	private static final String TAG = "TC";
-	
-	private String mParam1;
-	private String mParam2;
 	
 	public static final String SERVER_URL = "http://api.irishrail.ie/realtime/realtime.asmx/getStationDataByCodeXML_WithNumMins";
 	public static final String QUERY_OPTIONS_STATION = "?StationCode=";
 	public static final String QUERY_OPTIONS_TIME = "&NumMins=";
 	public static final String TEXT = "";
 	private OnFragmentInteractionListener mListener;
-	private Button btnShowTrain;
 	private String queryUrl;
 	private HashMap<Object, Object> currentMap;
 	private ResultCallBack callback;
@@ -99,8 +89,8 @@ public class TrainFragment extends Fragment implements ResultCallBack{
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	
@@ -117,7 +107,7 @@ public class TrainFragment extends Fragment implements ResultCallBack{
 		listT = (ListView) view.findViewById(R.id.listT);
 		
 		// handle the button showTrains
-		btnShowTrain = (Button) view.findViewById(R.id.btnShowTrain);
+		Button btnShowTrain = (Button) view.findViewById(R.id.btnShowTrain);
 		btnShowTrain.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -142,20 +132,20 @@ public class TrainFragment extends Fragment implements ResultCallBack{
 		// shrink width with wraper
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.trainWraper);
 		// Get device dimensions
-		dm = getWidthAndHeightPx();
+		DisplayMetrics dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
 		LinearLayout.LayoutParams lpWrapper = (LinearLayout.LayoutParams) linearLayout.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.9)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.9)) / 2;
 		
 		// Spinners
-		spinnerStation = (Spinner) view.findViewById(R.id.spinnerStation);
+		Spinner spinnerStation = (Spinner) view.findViewById(R.id.spinnerStation);
 		ArrayAdapter<CharSequence> adapterStations = ArrayAdapter.createFromResource(getActivity(),
 						R.array.stations, android.R.layout.simple_spinner_item);
 		adapterStations.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinnerStation.setAdapter(adapterStations);
 		
-		spinnerTime = (Spinner) view.findViewById(R.id.spinnerTime);
+		Spinner spinnerTime = (Spinner) view.findViewById(R.id.spinnerTime);
 		ArrayAdapter<CharSequence> adapterTime = ArrayAdapter.createFromResource(getActivity(),
 						R.array.minutes, android.R.layout.simple_spinner_item);
 		adapterTime.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

@@ -3,28 +3,32 @@ package ivandinkov.github.com.taxiclerk;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by iv on 24/09/2017.
  */
 
-public class IncomeAdapter extends ArrayAdapter<Income> {
+class IncomeAdapter extends ArrayAdapter<Income> {
 	
+	private static final String TAG = "TC";
 	private final Activity mContext;
 	private final ArrayList<Income> list;
 	//private final UpdateRecord updateCallback;
 	Context mContex;
 	private DisplayMetrics dm;
-	
+	SimpleDateFormat sdf;
 	public interface UpdateRecord {
 		void onRecordSelectUpdate(int recordID, int flag);
 	}
@@ -39,6 +43,7 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 		super(context, R.layout.single_income_record, list);
 		this.mContext = context;
 		this.list = list;
+		this.sdf = new SimpleDateFormat();
 	}
 	
 	
@@ -117,13 +122,27 @@ public class IncomeAdapter extends ArrayAdapter<Income> {
 		
 		ViewHolder holder = (ViewHolder) view.getTag();
 		holder.income_id.setText(String.valueOf(list.get(position).getID()));
-		holder.income_date.setText(list.get(position).getDate());
+		holder.income_date.setText(convertToFullDate(list.get(position).getDate()));
 		holder.income_type.setText(list.get(position).getIncType());
 		holder.income_amount.setText(list.get(position).getAmount());
 		holder.income_provider.setText(list.get(position).getNote());
 		holder.income_note.setText(list.get(position).getProvider());
 		
+		
 		return view;
+	}
+	private String convertToFullDate(String string){
+		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
+		Date date = null;
+		try {
+			Log.i(TAG,"db string: " + string);
+			date = format.parse(string);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		sdf.applyPattern("dd-MMM-yyyy hh:mm");
+		return sdf.format(date);
 	}
 	
 	

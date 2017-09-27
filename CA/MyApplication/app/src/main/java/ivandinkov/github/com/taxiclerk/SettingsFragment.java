@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,10 +24,6 @@ public class SettingsFragment extends Fragment {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
-	
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
 	
 	private OnFragmentInteractionListener mListener;
 	
@@ -59,8 +53,8 @@ public class SettingsFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	

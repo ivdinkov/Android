@@ -4,9 +4,23 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import static android.R.attr.type;
 
 
 /**
@@ -22,12 +36,18 @@ public class DayFragment extends Fragment {
 	// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
-	
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
-	
+	private static final String TAG = "TC";
 	private OnFragmentInteractionListener mListener;
+	private static SimpleDateFormat sdfDB;
+	private TextView txtAmountDayJobs;
+	private TextView txtAmountExpenses;
+	private TextView txtAmountAccJobs;
+	private TextView txtAmountCashJobs;
+	private String dayCash;
+	private String dayAccount;
+	private String dayExpense;
+	private String dayJobs;
+	DecimalFormat dec = new DecimalFormat("0.00");
 	
 	public DayFragment() {
 		// Required empty public constructor
@@ -55,8 +75,8 @@ public class DayFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	
@@ -64,7 +84,55 @@ public class DayFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_day, container, false);
+		View view = inflater.inflate(R.layout.fragment_day, container, false);
+		
+		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.dayLayoutWraper);
+		// Get device dimensions
+		DisplayMetrics dm = getWidthAndHeightPx();
+		// Set register layout holder to 80% width
+		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
+		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
+		
+		txtAmountDayJobs = (TextView) view.findViewById(R.id.txtDayJobs);
+		txtAmountCashJobs = (TextView) view.findViewById(R.id.txtCash);
+		txtAmountAccJobs = (TextView) view.findViewById(R.id.txtAccount);
+		txtAmountExpenses = (TextView) view.findViewById(R.id.txtExpenses);
+		
+		// Extract DB data
+		DB db = new DB(getContext(), null);
+		// day cash
+		String c = db.getDayAmount(getDate(), "cash");
+		if (!c.isEmpty()) {
+			float in = Float.parseFloat(c);
+			txtAmountCashJobs.setText(dec.format(in));
+		}
+		String a = db.getDayAmount(getDate(), "account");
+		if (!a.isEmpty()) {
+			float in = Float.parseFloat(a);
+			txtAmountAccJobs.setText(dec.format(in));
+		}
+		String exp = db.getDailyExp(getDate());
+		if (!exp.isEmpty()) {
+			float in = Float.parseFloat(exp);
+			txtAmountExpenses.setText(dec.format(in));
+		}
+	
+
+//		txtToTakeHome.setText(in))
+	//txtAmountCashJobs.setText(dec.format(in));
+//		txtAmountAccJobs.setText(dayAccount);
+//		txtAmountDayJobs.setText(dayJobs);
+		
+		
+		
+		return view;
+}
+	
+	private DisplayMetrics getWidthAndHeightPx() {
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm;
 	}
 	
 	// TODO: Rename method, update argument and hook method into UI event
@@ -92,17 +160,32 @@ public class DayFragment extends Fragment {
 	}
 	
 	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated
-	 * to the activity and potentially other fragments contained in that
-	 * activity.
-	 * <p>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
+	 * Get the current date.
 	 */
-	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
-		void onFragmentInteraction(Uri uri);
+	private String getDate() {
+		final Calendar c = Calendar.getInstance();
+		int year = c.get(Calendar.YEAR);
+		int month = c.get(Calendar.MONTH);
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		c.set(year, month, day);
+		
+		sdfDB = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+		
+		return sdfDB.format(c.getTime());
 	}
+
+/**
+ * This interface must be implemented by activities that contain this
+ * fragment to allow an interaction in this fragment to be communicated
+ * to the activity and potentially other fragments contained in that
+ * activity.
+ * <p>
+ * See the Android Training lesson <a href=
+ * "http://developer.android.com/training/basics/fragments/communicating.html"
+ * >Communicating with Other Fragments</a> for more information.
+ */
+public interface OnFragmentInteractionListener {
+	// TODO: Update argument type and name
+	void onFragmentInteraction(Uri uri);
+}
 }

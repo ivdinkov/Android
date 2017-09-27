@@ -27,8 +27,6 @@ public class ExpenseFragment extends ListFragment {
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 	
-	private String mParam1;
-	private String mParam2;
 	private static final String TAG = "TC";
 	
 	
@@ -60,8 +58,8 @@ public class ExpenseFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	
@@ -86,7 +84,6 @@ public class ExpenseFragment extends ListFragment {
 		
 		for (MExpense cn : expenseList) {
 			list.add(new MExpense(Integer.valueOf(cn.getID()), cn.getDate(), cn.getExpPayType(), cn.getAmount(), cn.getExpenseType(), cn.getNote(), cn.getImage()));
-			
 		}
 		db.close();
 		return list;

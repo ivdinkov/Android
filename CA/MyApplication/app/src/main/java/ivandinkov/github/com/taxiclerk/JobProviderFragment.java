@@ -15,12 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -39,15 +37,9 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	private static final String ARG_PARAM2 = "param2";
 	// Error message
 	private static String error_msg = "Invalid character!";
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
 	
 	private OnFragmentInteractionListener mListener;
 	private static Context mContext;
-	private int recordID;
-	private DB db;
-	private Button btnAddProvider;
 	
 	public JobProviderFragment() {
 		// Required empty public constructor
@@ -75,8 +67,8 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	
@@ -87,7 +79,7 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 		View v = inflater.inflate(R.layout.fragment_job_provider, container, false);
 		
 		// Initialise button
-		btnAddProvider = (Button) v.findViewById(R.id.btnAddProvider);
+		Button btnAddProvider = (Button) v.findViewById(R.id.btnAddProvider);
 		btnAddProvider.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -104,7 +96,7 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	}
 	
 	private List<Provider> GetProviderList() {
-		db = new DB(getActivity(), null);
+		DB db = new DB(getActivity(), null);
 		List<Provider> providerList = db.getAllProviders();
 		db.close();
 		return providerList;
@@ -137,7 +129,7 @@ public class JobProviderFragment extends ListFragment implements UpdateRecord {
 	
 	@Override
 	public void onRecordSelectUpdate(int recordID, int flag) {
-		this.recordID = recordID;
+		int recordID1 = recordID;
 		switch (flag) {
 			case 1:
 				// DELETE RECORD

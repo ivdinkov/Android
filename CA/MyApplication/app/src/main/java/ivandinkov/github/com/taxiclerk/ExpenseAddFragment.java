@@ -37,13 +37,8 @@ public class ExpenseAddFragment extends ListFragment implements UpdateRecord {
 	private static final String ARG_PARAM2 = "param2";
 	
 	private static Context mContext;
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
 	
 	private OnFragmentInteractionListener mListener;
-	private DB db;
-	private Button btnAddExpense;
 	
 	public ExpenseAddFragment() {
 		// Required empty public constructor
@@ -83,8 +78,8 @@ public class ExpenseAddFragment extends ListFragment implements UpdateRecord {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	
@@ -93,7 +88,7 @@ public class ExpenseAddFragment extends ListFragment implements UpdateRecord {
 	}
 	
 	private List<Expense> GetExpenseList() {
-		db = new DB(getActivity(), null);
+		DB db = new DB(getActivity(), null);
 		List<Expense> expenseNamesList = db.GetExpenseTypeList();
 		db.close();
 		return expenseNamesList;
@@ -106,7 +101,7 @@ public class ExpenseAddFragment extends ListFragment implements UpdateRecord {
 		View v = inflater.inflate(R.layout.fragment_expense_provider, container, false);
 		
 		// Initialise button
-		btnAddExpense = (Button) v.findViewById(R.id.btnAddExpenseProvider);
+		Button btnAddExpense = (Button) v.findViewById(R.id.btnAddExpenseProvider);
 		btnAddExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {

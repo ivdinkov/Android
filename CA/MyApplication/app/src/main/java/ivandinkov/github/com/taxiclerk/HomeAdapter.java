@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * Created by iv on 06/09/2017.
  */
 
-public class HomeAdapter extends FragmentStatePagerAdapter {
+class HomeAdapter extends FragmentStatePagerAdapter {
 	
 	private String fragmentNames[] = {"DAY","WEEK","YEAR"};
 	

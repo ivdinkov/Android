@@ -4,19 +4,19 @@ package ivandinkov.github.com.taxiclerk;
  * Created by iv on 06/09/2017.
  */
 
-public class Provider {
+class Provider {
 	
 	
 	
 	//private variables
 	/** The _id. */
-	int _id;
+	private int _id;
 	
 	/** The _name. */
-	String _name;
+	private String _name;
 	
 	/** The _active. */
-	String _active;
+	private String _active;
 	
 	
 	// Empty constructor

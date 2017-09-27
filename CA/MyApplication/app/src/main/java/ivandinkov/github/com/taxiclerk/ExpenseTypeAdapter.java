@@ -15,7 +15,6 @@ import java.util.List;
 public class ExpenseTypeAdapter extends ArrayAdapter<Expense> {
 	private final Activity mContext;
 	private final List<Expense> mList;
-	private final UpdateRecord mUpdateCallback;
 	
 	/**
 	 * Instantiates a new income custom adapter.
@@ -28,7 +27,7 @@ public class ExpenseTypeAdapter extends ArrayAdapter<Expense> {
 		super(context, R.layout.list_view_provider, list);
 		this.mContext = context;
 		this.mList = list;
-		this.mUpdateCallback = updateCallback;
+		UpdateRecord mUpdateCallback = updateCallback;
 	}
 	
 	public interface UpdateRecord {

@@ -4,31 +4,31 @@ package ivandinkov.github.com.taxiclerk;
  * Created by iv on 24/09/2017.
  */
 
-public class MExpense {
+class MExpense {
 	
 	// private variables
 	/** The _id. */
-	int _id;
+	private int _id;
 	
 	/** The _amount. */
-	String _amount;
+	private String _amount;
 	
 	/** The _date. */
-	String _date;
+	private String _date;
 	
 	/** The _note. */
-	String _note;
+	private String _note;
 	
 	/** The _active. */
 	String _active;
 	
 	/** The _pay_type. */
-	String _pay_type;
+	private String _pay_type;
 	
 	/** The _provider. */
-	String _expenseType;
+	private String _expenseType;
 	
-	String _image;
+	private String _image;
 	
 	// Empty constructor
 	/**

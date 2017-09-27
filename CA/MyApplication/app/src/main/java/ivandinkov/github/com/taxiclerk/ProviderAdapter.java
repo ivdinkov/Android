@@ -1,11 +1,9 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.app.Activity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,7 +16,6 @@ public class ProviderAdapter extends ArrayAdapter<Provider> {
 	
 	private final Activity mContext;
 	private final List<Provider> mList;
-	private final UpdateRecord mUpdateCallback;
 	
 	/**
 	 * Instantiates a new income custom adapter.
@@ -31,7 +28,7 @@ public class ProviderAdapter extends ArrayAdapter<Provider> {
 		super(context, R.layout.list_view_provider, list);
 		this.mContext = context;
 		this.mList = list;
-		this.mUpdateCallback = updateCallback;
+		UpdateRecord mUpdateCallback = updateCallback;
 	}
 	
 	

@@ -3,9 +3,9 @@ package ivandinkov.github.com.taxiclerk;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.Environment;
-import android.provider.MediaStore;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.icu.text.DecimalFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +15,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.net.URI;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by iv on 25/09/2017.
  */
 
-public class ExpenseAdapter extends ArrayAdapter<MExpense> {
+class ExpenseAdapter extends ArrayAdapter<MExpense> {
 	
 	private static final String TAG = "TC";
 	private final Activity mContext;
 	private final ArrayList<MExpense> list;
-	//private final UpdateRecord updateCallback;
+	private SimpleDateFormat sdf;
 	
 	public interface UpdateRecord {
 		void onRecordSelectUpdate(int recordID, int flag);
@@ -42,6 +46,7 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 		super(context, R.layout.single_expense_record, list);
 		this.mContext = context;
 		this.list = list;
+		sdf = new SimpleDateFormat();
 	}
 	
 	
@@ -49,7 +54,9 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 	 * The Class ViewHolder.
 	 */
 	static class ViewHolder {
-		/** The provider. */
+		/**
+		 * The provider.
+		 */
 		protected TextView expense;
 		public TextView expense_id;
 		public TextView expense_date;
@@ -82,39 +89,6 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 				viewHolder.expense_note = (TextView) view.findViewById(R.id.textViewNote);
 				viewHolder.expense_image = (ImageView) view.findViewById(R.id.imageExp);
 				
-//				viewHolder.btnEdit = (ImageButton) view.findViewById(R.id.btnIncomeEdit);
-//				viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-////
-//					@Override
-//					public void onClick(View v) {
-//						String msg = (String) viewHolder.income_id.getText();
-//						int flag = 2;// 2 EDIT RECORD
-//						try {
-//							updateCallback.onRecordSelectUpdate(Integer.valueOf(msg), flag);
-//						} catch (ClassCastException e) {
-//							throw new ClassCastException(mContext.toString() + " must implement DeleteRecord");
-//						}
-//
-//					}
-//				});
-//				viewHolder.btnDelete = (ImageButton) view.findViewById(R.id.btnIncomeDelete);
-//				viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						String msg = (String) viewHolder.income_id.getText();
-//						int flag = 1;// 1 DELETE RECORD
-//						try {
-//							updateCallback.onRecordSelectUpdate(Integer.valueOf(msg), flag);
-//						} catch (ClassCastException e) {
-//							throw new ClassCastException(context.toString() + " must implement DeleteRecord");
-//						}
-//
-//						// db.updateIncome(msg);
-//					}
-//
-//				});
-//
 				view.setTag(viewHolder);
 			}
 		} else {
@@ -122,45 +96,39 @@ public class ExpenseAdapter extends ArrayAdapter<MExpense> {
 		}
 		ViewHolder holder = (ViewHolder) view.getTag();
 		holder.expense_id.setText(String.valueOf(list.get(position).getID()));
-		holder.expense_date.setText(list.get(position).getDate());
+		holder.expense_date.setText(convertToFullDate(list.get(position).getDate()));
 		holder.expense_type.setText(list.get(position).getExpPayType());
 		holder.expense_amount.setText(list.get(position).getAmount());
 		holder.expense_provider.setText(list.get(position).getNote());
 		holder.expense_note.setText(list.get(position).getExpenseType());
-		holder.expense_image.setImageBitmap(decodeSampledBitmapFromResource(list.get(position).getImage(),30,30));
+		holder.expense_image.setImageBitmap(decodeImage(list.get(position).getImage()));
 		return view;
 	}
 	
-	
-	public static int calculateInSampleSize(
-					BitmapFactory.Options options, int reqWidth, int reqHeight) {
-// Raw height and width of image
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 2;
-
-		if (height > reqHeight || width > reqWidth) {
-			if (width > height) {
-				inSampleSize = Math.round((float)height / (float)reqHeight);
-			} else {
-				inSampleSize = Math.round((float)width / (float)reqWidth);
-			}
+	private String convertToFullDate(String string) {
+		SimpleDateFormat format = new SimpleDateFormat("ddMMyyyyHHmm");
+		Date date = null;
+		try {
+			Log.i(TAG, "db string: " + string);
+			date = format.parse(string);
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
-		return inSampleSize;
+		
+		sdf.applyPattern("dd-MMM-yyyy hh:mm");
+		return sdf.format(date);
 	}
 	
-	public static Bitmap decodeSampledBitmapFromResource(String resId,int reqWidth, int reqHeight) {
+	
+	private static Bitmap decodeImage(String pathString) {
 		
-		// First decode with inJustDecodeBounds=true to check dimensions
-		final BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(resId, options);
-		
-		// Calculate inSampleSize
-		options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
-		
-		// Decode bitmap with inSampleSize set
-		options.inJustDecodeBounds = false;
-		return BitmapFactory.decodeFile(resId, options);
+		if (pathString != null) {
+			Log.i(TAG, pathString);
+			return BitmapFactory.decodeFile(pathString);
+			
+		}
+		Bitmap b = Bitmap.createBitmap(40, 40, Bitmap.Config.ARGB_8888);
+		b.eraseColor(Color.GRAY);
+		return b;
 	}
 }

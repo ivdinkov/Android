@@ -38,10 +38,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +46,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
+//import static ivandinkov.github.com.taxiclerk.R.id.imageView;
 
 
 /**
@@ -66,26 +63,17 @@ public class NewExpenseFragment extends Fragment {
 	private static final String ARG_PARAM1 = "param1";
 	private static final String ARG_PARAM2 = "param2";
 	
-	// TODO: Rename and change types of parameters
-	private String mParam1;
-	private String mParam2;
 	private OnFragmentInteractionListener mListener;
 	private static final String TAG = "TC";
-	private DisplayMetrics dm;
 	private String expenseAmountToBeSaved;
-	private Button btnNewExpenseNote;
 	private Button btnSelectExpense;
-	private Button btnSaveNewExpense;
 	private RadioButton radioCashExpense;
 	private RadioButton radioAccountExpense;
-	private Button btnCancelNewExpense;
-	private ImageView imgCam;
 	private RadioButton radioBankExpense;
 	private String expensePaymentTypeToBeSaved = "Cash";
 	static private String noteToBeSaved;
 	private String expenseTypeToBeSaved;
 	private EditText txtAmountToBeSaved;
-	private ImageView imgExpCalendar;
 	private static SimpleDateFormat sdf;
 	private static SimpleDateFormat sdfDB;
 	private static String dateToDisplay;
@@ -122,8 +110,8 @@ public class NewExpenseFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			mParam1 = getArguments().getString(ARG_PARAM1);
-			mParam2 = getArguments().getString(ARG_PARAM2);
+			String mParam1 = getArguments().getString(ARG_PARAM1);
+			String mParam2 = getArguments().getString(ARG_PARAM2);
 		}
 	}
 	
@@ -135,21 +123,21 @@ public class NewExpenseFragment extends Fragment {
 		
 		// Initialize elements
 		txtAmountToBeSaved = (EditText) view.findViewById(R.id.editTextNewExpenseAmount);
-		btnNewExpenseNote = (Button) view.findViewById(R.id.btnNoteNewExpense);
+		Button btnNewExpenseNote = (Button) view.findViewById(R.id.btnNoteNewExpense);
 		btnSelectExpense = (Button) view.findViewById(R.id.btnExpenseTypePicker);
-		btnSaveNewExpense = (Button) view.findViewById(R.id.btnSaveNewExpense);
+		Button btnSaveNewExpense = (Button) view.findViewById(R.id.btnSaveNewExpense);
 		radioCashExpense = (RadioButton) view.findViewById(R.id.cashNewExpense);
 		radioAccountExpense = (RadioButton) view.findViewById(R.id.accNewExpense);
 		radioBankExpense = (RadioButton) view.findViewById(R.id.bankNewExpense);
-		btnCancelNewExpense = (Button) view.findViewById(R.id.btnCancelNewExpense);
-		imgCam = (ImageView) view.findViewById(R.id.imageCam);
-		imgExpCalendar = (ImageView) view.findViewById(R.id.imageExpCalendar);
+		Button btnCancelNewExpense = (Button) view.findViewById(R.id.btnCancelNewExpense);
+		ImageView imgCam = (ImageView) view.findViewById(R.id.imageCam);
+		ImageView imgExpCalendar = (ImageView) view.findViewById(R.id.imageExpCalendar);
 		txtCurDate = (TextView) view.findViewById(R.id.textViewCurDateExp);
 		
 		
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newExpenseLayoutWraper);
 		// Get device dimensions
-		dm = getWidthAndHeightPx();
+		DisplayMetrics dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
 		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
@@ -194,7 +182,7 @@ public class NewExpenseFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				// validate input
-				if (expensePaymentTypeToBeSaved == null || expenseAmountToBeSaved == null) {
+				if (expensePaymentTypeToBeSaved == null || expenseAmountToBeSaved == null || expenseTypeToBeSaved == null) {
 					Toast toast = Toast.makeText(getActivity(), "Incomplete details", Toast.LENGTH_LONG);
 					toast.setGravity(Gravity.TOP, 0, 0);
 					toast.show();
@@ -210,8 +198,8 @@ public class NewExpenseFragment extends Fragment {
 						//endImage = f.getName();
 					}
 					
-					db.saveNewExpense(new MExpense(dateToBeSaved, expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved,endImage));
-					
+					db.saveNewExpense(new MExpense(dateToBeSaved, expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved, endImage));
+					Log.i(TAG,"new expanse:  pay type: " + expensePaymentTypeToBeSaved+ "note: " + noteToBeSaved + "exp type: " + expenseTypeToBeSaved + "img: " + endImage);
 					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
 					buttonHolder.setVisibility(View.VISIBLE);
 					
@@ -340,10 +328,11 @@ public class NewExpenseFragment extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-			//Bundle extras = data.getExtras();
-			//Bitmap imageBitmap = (Bitmap) extras.get("data");
-			//imageView.setImageBitmap(imageBitmap);
 			isPhotoTaken = true;
+			Toast toast = Toast.makeText(getActivity(), "Image save success", Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.TOP, 0, 0);
+			toast.show();
+			
 		}
 	}
 	
@@ -462,7 +451,7 @@ public class NewExpenseFragment extends Fragment {
 		c.set(year, month, day);
 		
 		sdf = new SimpleDateFormat("d MMM", Locale.ENGLISH);
-		sdfDB = new SimpleDateFormat("dd MM yyyy, HH:mm", Locale.ENGLISH);
+		sdfDB = new SimpleDateFormat("ddMMyyyyHHmm", Locale.ENGLISH);
 		
 		dateToDisplay = sdf.format(c.getTime());
 		dateToBeSaved = sdfDB.format(c.getTime());

@@ -1,15 +1,11 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -17,11 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.facebook.stetho.Stetho;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
 				implements NavigationView.OnNavigationItemSelectedListener,
@@ -42,26 +39,20 @@ public class MainActivity extends AppCompatActivity
 
 {
 	private static final String TAG = "TC";
-	LinearLayout btnHolder;
-	boolean isFirstTime = true;
+	private LinearLayout btnHolder;
+	private boolean isFirstTime = true;
 	private FirebaseAuth firebaseAuth;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Stetho.initializeWithDefaults(this);
+		
 		setContentView(R.layout.activity_main);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		
 		firebaseAuth = FirebaseAuth.getInstance();
-		//		FirebaseUser user = firebaseAuth.getCurrentUser();
-//		if(user != null){
-//			Log.i(TAG,"User signed in");
-//			startActivity(new Intent(LoginActivity.this,MainActivity.class));
-//		}else{
-//			Log.i(TAG,"User signed out");
-//		}
-		
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 		ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -241,8 +232,6 @@ public class MainActivity extends AppCompatActivity
 			displayView(6);
 		} else if (id == R.id.nav_logout) {
 			displayView(7);
-		} else if (id == R.id.nav_send) {
-			
 		}
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
