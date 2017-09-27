@@ -327,35 +327,40 @@ public class TrainFragment extends Fragment implements ResultCallBack{
 			// Number of trains
 			ArrayList<HashMap<String, String>> result = new ArrayList<>();
 			HashMap<String, String> currentMap;
+			
 			for (int i = 0; i < itemsList.getLength(); i++) {
 				
 				Log.i(TAG, "Number of trains: " + String.valueOf(itemsList.getLength()));
 				currentItem = itemsList.item(i);
 				itemChildren = currentItem.getChildNodes();
 				currentMap = new HashMap<>();
+				Log.i(TAG, "Size of child: " + String.valueOf(itemChildren.getLength()));
+				
 				for (int j = 0; j < itemChildren.getLength(); j++) {
+					
 					currentChild = itemChildren.item(j);
 					if (currentChild.getNodeName().equalsIgnoreCase("Origin")) {
-						//Log.i(TAG, currentChild.getTextContent());
+						Log.i(TAG, currentChild.getTextContent());
 						currentMap.put("origin", currentChild.getTextContent());
 					}
 					if (currentChild.getNodeName().equalsIgnoreCase("Destination")) {
-						//Log.i(TAG, currentChild.getTextContent());
+						Log.i(TAG, currentChild.getTextContent());
 						currentMap.put("destination", currentChild.getTextContent());
 					}
 					if (currentChild.getNodeName().equalsIgnoreCase("Late")) {
-						//Log.i(TAG, currentChild.getTextContent());
+						Log.i(TAG, currentChild.getTextContent());
 						currentMap.put("late", currentChild.getTextContent());
 					}
 					if (currentChild.getNodeName().equalsIgnoreCase("Exparrival")) {
-						//Log.i(TAG, currentChild.getTextContent());
+						Log.i(TAG, currentChild.getTextContent());
 						currentMap.put("arrival", currentChild.getTextContent());
 					}
 					
-					if (currentMap != null && !currentMap.isEmpty()) {
-						result.add(currentMap);
-					}
 				}
+				if (currentMap != null && !currentMap.isEmpty()) {
+					result.add(currentMap);
+				}
+				
 			}
 			return result;
 		}
@@ -365,19 +370,4 @@ interface ResultCallBack{
 	void onPreExecute();
 	void onPostExecute(ArrayList<HashMap<String, String>> result);
 }
-//class TrainDisplayAdapter1 extends BaseAdapter{
-//}
-//class MyHolder{
-//	TextView txtFrom;
-//	TextView txtTo;
-//	TextView txtTime;
-//	TextView txtDelay;
-//	public MyHolder(View view){
-//		txtFrom = (TextView) view.findViewById(R.id.txtFrom);
-//		txtTo = (TextView) view.findViewById(R.id.txtTo);
-//		txtTime = (TextView) view.findViewById(R.id.txtTime);
-//		txtDelay = (TextView) view.findViewById(R.id.txtDelay);
-//	}
-//}
-//
 
