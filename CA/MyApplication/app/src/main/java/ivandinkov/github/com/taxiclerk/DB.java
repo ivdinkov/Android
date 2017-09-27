@@ -479,7 +479,7 @@ class DB extends SQLiteOpenHelper {
 		String sql = "SELECT SUM(CAST(" + KEY_EXP_AMOUNT + " as DECIMAL(9,2))) FROM " + TABLE_EXPENSE
 						+ " WHERE " + date + " LIKE '%" + date + "%'";
 		
-		Log.i(TAG,sql);
+		
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
 			do {
@@ -491,24 +491,21 @@ class DB extends SQLiteOpenHelper {
 		cursor.close();
 		return total;
 	}
-
-//	public String getTest(String date) {
-//		String cashTotal = "";
-//		SQLiteDatabase db = this.getReadableDatabase();
-//		String sql = "SELECT " + KEY_INC_DATE + " FROM " + TABLE_INCOME
-//						+ " WHERE " + KEY_INC_TYPE + " LIKE 'cash' AND " + KEY_INC_DATE + " LIKE '" + date + "'";
-//		Log.i(TAG,sql);
-//		Cursor cursor = db.rawQuery(sql, null);
-//		if (cursor.moveToFirst()) {
-//			do {
-//				cashTotal = String.valueOf(cursor.getDouble(0));
-//				Log.i(TAG,cashTotal);
-//			} while (cursor.moveToNext());
-//		}
-//		db.close();
-//		cursor.close();
-//		return cashTotal;
-//	}
-//
 	
+	public int allJobsForDate(String date) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		int count = 0;
+		try {
+			Cursor c = null;
+			String query = "SELECT * FROM " + TABLE_INCOME + " WHERE " + KEY_INC_DATE + " LIKE '%" + date + "%'";
+			c = db.rawQuery(query,null);
+			c.moveToFirst();
+			count = c.getCount();
+			c.close();
+		} catch (Exception e) {
+			Log.e("TC", "DB ERROR: ", e);
+		}
+		db.close();
+		return count;
+	}
 }

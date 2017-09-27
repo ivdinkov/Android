@@ -43,11 +43,8 @@ public class DayFragment extends Fragment {
 	private TextView txtAmountExpenses;
 	private TextView txtAmountAccJobs;
 	private TextView txtAmountCashJobs;
-	private String dayCash;
-	private String dayAccount;
-	private String dayExpense;
-	private String dayJobs;
 	DecimalFormat dec = new DecimalFormat("0.00");
+	private int allJobsForDay;
 	
 	public DayFragment() {
 		// Required empty public constructor
@@ -107,27 +104,28 @@ public class DayFragment extends Fragment {
 			float in = Float.parseFloat(c);
 			txtAmountCashJobs.setText(dec.format(in));
 		}
+		// dat account
 		String a = db.getDayAmount(getDate(), "account");
 		if (!a.isEmpty()) {
 			float in = Float.parseFloat(a);
 			txtAmountAccJobs.setText(dec.format(in));
 		}
+		// day expenses
 		String exp = db.getDailyExp(getDate());
 		if (!exp.isEmpty()) {
 			float in = Float.parseFloat(exp);
 			txtAmountExpenses.setText(dec.format(in));
 		}
-	
-
-//		txtToTakeHome.setText(in))
-	//txtAmountCashJobs.setText(dec.format(in));
-//		txtAmountAccJobs.setText(dayAccount);
-//		txtAmountDayJobs.setText(dayJobs);
-		
-		
+		// day total jobs
+		allJobsForDay = db.allJobsForDate(getDate());
+		if (allJobsForDay != 0) {
+			String jobs = String.valueOf(allJobsForDay);
+			txtAmountDayJobs.setText(jobs);
+		}
+		db.close();
 		
 		return view;
-}
+	}
 	
 	private DisplayMetrics getWidthAndHeightPx() {
 		DisplayMetrics dm = new DisplayMetrics();
@@ -173,19 +171,19 @@ public class DayFragment extends Fragment {
 		
 		return sdfDB.format(c.getTime());
 	}
-
-/**
- * This interface must be implemented by activities that contain this
- * fragment to allow an interaction in this fragment to be communicated
- * to the activity and potentially other fragments contained in that
- * activity.
- * <p>
- * See the Android Training lesson <a href=
- * "http://developer.android.com/training/basics/fragments/communicating.html"
- * >Communicating with Other Fragments</a> for more information.
- */
-public interface OnFragmentInteractionListener {
-	// TODO: Update argument type and name
-	void onFragmentInteraction(Uri uri);
-}
+	
+	/**
+	 * This interface must be implemented by activities that contain this
+	 * fragment to allow an interaction in this fragment to be communicated
+	 * to the activity and potentially other fragments contained in that
+	 * activity.
+	 * <p>
+	 * See the Android Training lesson <a href=
+	 * "http://developer.android.com/training/basics/fragments/communicating.html"
+	 * >Communicating with Other Fragments</a> for more information.
+	 */
+	public interface OnFragmentInteractionListener {
+		// TODO: Update argument type and name
+		void onFragmentInteraction(Uri uri);
+	}
 }

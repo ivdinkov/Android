@@ -123,9 +123,12 @@ class ExpenseAdapter extends ArrayAdapter<MExpense> {
 	private static Bitmap decodeImage(String pathString) {
 		
 		if (pathString != null) {
-			Log.i(TAG, pathString);
-			return BitmapFactory.decodeFile(pathString);
 			
+			BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+			bmOptions. inJustDecodeBounds = false;
+			bmOptions. inSampleSize = 4;
+			Bitmap bitmap = BitmapFactory.decodeFile(pathString, bmOptions);
+			return bitmap;
 		}
 		Bitmap b = Bitmap.createBitmap(40, 40, Bitmap.Config.ARGB_8888);
 		b.eraseColor(Color.GRAY);
