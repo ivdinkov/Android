@@ -1,7 +1,10 @@
 package ivandinkov.github.com.taxiclerk;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -16,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity
 				JobProviderFragment.OnFragmentInteractionListener,
 				ExpenseAddFragment.OnFragmentInteractionListener,
 				TrainFragment.OnFragmentInteractionListener
-			
+
 
 {
 	private static final String TAG = "TC";
@@ -109,9 +113,9 @@ public class MainActivity extends AppCompatActivity
 		switch (position) {
 			case 1:
 				// Show buttons
-					if (!isFirstTime) {
-						btnHolder.setVisibility(View.VISIBLE);
-					}
+				if (!isFirstTime) {
+					btnHolder.setVisibility(View.VISIBLE);
+				}
 				fragment = new HomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
@@ -156,27 +160,52 @@ public class MainActivity extends AppCompatActivity
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 7:
+				btnHolder.setVisibility(View.GONE);
+				// Send feedback
+				sendEmailFeedback();
+				break;
+			case 8:
 				// Sign Out App
 				finish();
 				firebaseAuth.signOut();
- 				startActivity(new Intent(MainActivity.this,LoginActivity.class));
+				startActivity(new Intent(MainActivity.this, LoginActivity.class));
 				
 				break;
 			
 			default:
 				break;
 		}
-		
-//		if (fragment != null) {
-//			FragmentManager fragmentManager = getSupportFragmentManager();
-//			fragmentManager.beginTransaction().replace(R.id.main_fragment_container,
-//							fragment).commit();
-//
-//		} else {
-//			finish();
-//			startActivity(new Intent(MainActivity.this,LoginActivity.class));
-//		}
 	}
+	
+	private void sendEmailFeedback() {
+		if (!checkConnection()) {
+			Toast.makeText(this, "Please check your connection!", Toast.LENGTH_LONG).show();
+		} else {
+			Intent chooser;
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ivdinkov@gmail.com"});
+			intent.putExtra(Intent.EXTRA_SUBJECT, "Taxi Clerk feedback");
+			intent.putExtra(Intent.EXTRA_TEXT, "");
+			intent.setType("message/rfc822");
+			
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+				startActivity(intent);
+			} else {
+				chooser = Intent.createChooser(intent, "Send Email");
+				startActivity(chooser);
+			}
+		}
+	}
+	
+	private Boolean checkConnection() {
+		ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+		NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+		if (activeNetwork != null) {
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void onBackPressed() {
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -230,8 +259,10 @@ public class MainActivity extends AppCompatActivity
 			displayView(5);
 		} else if (id == R.id.nav_trains) {
 			displayView(6);
-		} else if (id == R.id.nav_logout) {
+		} else if (id == R.id.nav_feedback) {
 			displayView(7);
+		} else if (id == R.id.nav_logout) {
+			displayView(8);
 		}
 		
 		DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

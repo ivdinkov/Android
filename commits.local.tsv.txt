@@ -1,0 +1,64 @@
+9bb695d	ivdinkov	Wed Sep 27 18:54:05 2017	Day fragment ready no UI
+
+3b9555b	ivdinkov	Wed Sep 27 16:11:48 2017	Day fragment started
+2c20	ivdinkov	Wed Sep 27 06:48:06 2017	IrishRail working
+
+827e9c7	ivdinkov	Wed Sep 27 06:04:38 2017	IrishRail shows data
+
+0c95321	ivdinkov	Tue Sep 26 23:57:56 2017	IrishRail listView
+
+5de668e	ivdinkov	Tue Sep 26 21:45:27 2017	IrishRail query ready
+e
+1f1e18	ivdinkov	Mon Sep 25 23:14:52 2017	API settup
+
+167557a	ivdinkov	Mon Sep 25 22:19:21 2017	Irish Rail API
+
+9de18d8	ivdinkov	Mon Sep 25 19:14:47 2017	image save not displaying
+
+1a53c1f	ivdinkov	Mon Sep 25 17:17:47 2017	expense image save and retreive
+
+eda8343	ivdinkov	Mon Sep 25 14:37:06 2017	photo take from add newexpense
+
+23e6bc3	ivdinkov	Mon Sep 25 09:30:09 2017	new income date picker 
+added
+267ivdinkov	Mon Sep 25 07:37:07 2017	expenses and income working
+
+b4c7fcb	ivdinkov	Mon Sep 25 06:28:54 2017	create new expenses no cam
+
+1a0cf22	ivdinkov	Sun Sep 24 22:08:33 2017	expenses type
+
+34a4da6	ivdinkov	Sun Sep 24 16:41:50 2017	income working no ui
+
+e3bc251	ivdinkov	Sun Sep 24 16:04:04 2017	income display all working
+
+ba07d34	ivdinkov	Sun Sep 24 14:07:12 2017	income fragment adapter
+
+b7010af	ivdinkov	Sun Sep 24 13:16:13 2017	income fragment ready
+
+ad5e5ff	ivdinkov	Sun Sep 24 09:42:12 2017	note dialog added to new income
+
+aa608eb	ivdinkov	Sun Sep 24 08:29:31 2017	Adding functionality of new income fragment
+ivdinkov	Sun Sep 24 08:12:09 2017	spike New income layout
+
+39d8053	ivdinkov	Sun Sep 24 06:56:50 2017	Edit text of new income
+a
+0349f7	ivdinkov	Sun Sep 24 06:32:24 2017	Firebase 
+working
+fivdinkov	Wed Sep 20 22:18:56 2017	Firebase Register
+
+f2dff6	ivdinkov	Thu Sep 7 21:49:06 2017		Added Provider
+
+d00b055	ivdinkov	Thu Sep 7 07:04:21 2017		DB + Provider Table
+
+202619e	ivdinkov	Wed Sep 6 19:48:03 2017		Home menu button fix
+
+910f629	ivdinkov	Wed Sep 6 15:18:26 2017		Added action to job/expense 
+buttons
+8ivdinkov	Wed Sep 6 14:36:07 2017		Add job/expense buttons
+
+9b3f9f8	ivdinkov	Wed Sep 6 14:06:50 2017		AppTheme color change
+
+45d3fb1	ivdinkov	Wed Sep 6 13:45:55 2017		Pager bg,text color
+
+416e9b6	ivdinkov	Wed Sep 6 13:22:21 2017		Main fragments created
+

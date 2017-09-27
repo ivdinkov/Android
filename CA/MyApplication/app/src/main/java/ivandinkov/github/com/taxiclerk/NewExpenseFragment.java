@@ -26,6 +26,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -37,7 +38,13 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -125,7 +132,7 @@ public class NewExpenseFragment extends Fragment {
 		txtAmountToBeSaved = (EditText) view.findViewById(R.id.editTextNewExpenseAmount);
 		Button btnNewExpenseNote = (Button) view.findViewById(R.id.btnNoteNewExpense);
 		btnSelectExpense = (Button) view.findViewById(R.id.btnExpenseTypePicker);
-		Button btnSaveNewExpense = (Button) view.findViewById(R.id.btnSaveNewExpense);
+		final Button btnSaveNewExpense = (Button) view.findViewById(R.id.btnSaveNewExpense);
 		radioCashExpense = (RadioButton) view.findViewById(R.id.cashNewExpense);
 		radioAccountExpense = (RadioButton) view.findViewById(R.id.accNewExpense);
 		radioBankExpense = (RadioButton) view.findViewById(R.id.bankNewExpense);
@@ -181,6 +188,8 @@ public class NewExpenseFragment extends Fragment {
 		btnSaveNewExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(btnSaveNewExpense.getWindowToken(), 0);
 				// validate input
 				if (expensePaymentTypeToBeSaved == null || expenseAmountToBeSaved == null || expenseTypeToBeSaved == null) {
 					Toast toast = Toast.makeText(getActivity(), "Incomplete details", Toast.LENGTH_LONG);
@@ -310,6 +319,33 @@ public class NewExpenseFragment extends Fragment {
 		return view;
 	}
 	
+	public static boolean copyFile(File sourceFile, File outputFile) {
+		try {
+			File sd = Environment.getExternalStorageDirectory();
+			if (sd.canWrite()) {
+				
+				if (!outputFile.exists()) {
+					outputFile.createNewFile();
+				}
+				if (sourceFile.exists()) {
+					InputStream src = new FileInputStream(sourceFile);
+					OutputStream dst = new FileOutputStream(outputFile);
+					// Copy the bits from instream to outstream
+					byte[] buf = new byte[1024];
+					int len;
+					while ((len = src.read(buf)) > 0) {
+						dst.write(buf, 0, len);
+					}
+					src.close();
+					dst.close();
+				}
+			}
+			return true;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return false;
+		}
+	}
 	
 	private void takePicture() {
 		Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);

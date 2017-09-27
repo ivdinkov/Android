@@ -25,20 +25,10 @@ class IncomeAdapter extends ArrayAdapter<Income> {
 	private static final String TAG = "TC";
 	private final Activity mContext;
 	private final ArrayList<Income> list;
-	//private final UpdateRecord updateCallback;
 	Context mContex;
 	private DisplayMetrics dm;
 	SimpleDateFormat sdf;
-	public interface UpdateRecord {
-		void onRecordSelectUpdate(int recordID, int flag);
-	}
-//
-//	public IncomeAdapter(Activity context, ArrayList<Income> list, UpdateRecord updateCallback) {
-//		super(context, R.layout.single_income_record, list);
-//		this.mContext = context;
-//		this.list = list;
-//		this.updateCallback = updateCallback;
-//	}
+
 	public IncomeAdapter(Activity context, ArrayList<Income> list) {
 		super(context, R.layout.single_income_record, list);
 		this.mContext = context;
@@ -81,39 +71,6 @@ class IncomeAdapter extends ArrayAdapter<Income> {
 				viewHolder.income_amount = (TextView) view.findViewById(R.id.textViewAmount);
 				viewHolder.income_provider = (TextView) view.findViewById(R.id.textViewProviderName);
 				viewHolder.income_note = (TextView) view.findViewById(R.id.textViewNote);
-//				viewHolder.btnEdit = (ImageButton) view.findViewById(R.id.btnIncomeEdit);
-//				viewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-////
-//					@Override
-//					public void onClick(View v) {
-//						String msg = (String) viewHolder.income_id.getText();
-//						int flag = 2;// 2 EDIT RECORD
-//						try {
-//							updateCallback.onRecordSelectUpdate(Integer.valueOf(msg), flag);
-//						} catch (ClassCastException e) {
-//							throw new ClassCastException(mContext.toString() + " must implement DeleteRecord");
-//						}
-//
-//					}
-//				});
-//				viewHolder.btnDelete = (ImageButton) view.findViewById(R.id.btnIncomeDelete);
-//				viewHolder.btnDelete.setOnClickListener(new View.OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						String msg = (String) viewHolder.income_id.getText();
-//						int flag = 1;// 1 DELETE RECORD
-//						try {
-//							updateCallback.onRecordSelectUpdate(Integer.valueOf(msg), flag);
-//						} catch (ClassCastException e) {
-//							throw new ClassCastException(context.toString() + " must implement DeleteRecord");
-//						}
-//
-//						// db.updateIncome(msg);
-//					}
-//
-//				});
-//
 				view.setTag(viewHolder);
 			}
 		} else {

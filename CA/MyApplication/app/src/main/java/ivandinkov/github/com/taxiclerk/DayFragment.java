@@ -13,6 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -123,9 +126,11 @@ public class DayFragment extends Fragment {
 			txtAmountDayJobs.setText(jobs);
 		}
 		db.close();
+	
 		
 		return view;
 	}
+	
 	
 	private DisplayMetrics getWidthAndHeightPx() {
 		DisplayMetrics dm = new DisplayMetrics();
