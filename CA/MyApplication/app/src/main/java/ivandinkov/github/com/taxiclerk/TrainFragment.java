@@ -117,13 +117,7 @@ public class TrainFragment extends Fragment implements ResultCallBack{
 					toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
 					toast.show();
 				} else {
-					// initialise xml params
-					queryUrl = buildUrl(SERVER_URL, QUERY_OPTIONS_STATION, QUERY_OPTIONS_TIME, selectedStation, selectedTime);
-					Log.i(TAG, "Build URL: " + queryUrl);
-					
-					// fire xml
-					IrishRail showTrains = new IrishRail(callback);
-					showTrains.execute();
+					execIrishRail();
 				}
 			}
 		});
@@ -173,8 +167,18 @@ public class TrainFragment extends Fragment implements ResultCallBack{
 			}
 		});
 		
+		execIrishRail();
 		
 		return view;
+	}
+	
+	private void execIrishRail(){
+		queryUrl = buildUrl(SERVER_URL, QUERY_OPTIONS_STATION, QUERY_OPTIONS_TIME, selectedStation, selectedTime);
+		Log.i(TAG, "Build URL: " + queryUrl);
+		
+		// fire xml
+		IrishRail showTrains = new IrishRail(callback);
+		showTrains.execute();
 	}
 	
 	private String buildUrl(String serverUrl, String queryOptionsStation, String queryOptionsTime, String selectedStation, String selectedTime) {

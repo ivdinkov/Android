@@ -1,0 +1,27 @@
+#Internal package file, do not edit.
+#Wed Oct 04 08:12:51 BST 2017
+2.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_
+5.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_49c1dcc72a6b8587f0beac05a97f1ac110c9a216\\classes.dex
+5.set=DEX
+3.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_
+6.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\todo_item.xml
+2.set=ANDROID_RESOURCE
+4.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_
+7.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_963a2c3ca11cec8b3362a6fa1e1b0dca90e20696\\classes.dex
+7.set=DEX
+count=8
+0.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\add_todo.xml
+5.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run-bootstrap_49c1dcc72a6b8587f0beac05a97f1ac110c9a216
+4.set=ANDROID_RESOURCE
+6.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_
+1.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\drawable-xhdpi-v4\\ic_launcher.png
+1.set=ANDROID_RESOURCE
+7.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\transforms\\dex\\debug\\folders\\1000\\10000\\instant-run_963a2c3ca11cec8b3362a6fa1e1b0dca90e20696
+2.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_\\res\\layout\\footer_view.xml
+6.set=ANDROID_RESOURCE
+0.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_
+3.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_\\resources.arsc
+3.set=ANDROID_RESOURCE
+1.base=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_
+4.file=C\:\\Users\\iv\\id_mad\\Coursera\\Solutions\\Lab4\\app\\build\\intermediates\\res\\resources-debug.ap_\\AndroidManifest.xml
+0.set=ANDROID_RESOURCE

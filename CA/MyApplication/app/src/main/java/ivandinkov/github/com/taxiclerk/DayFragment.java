@@ -102,13 +102,13 @@ public class DayFragment extends Fragment {
 		// Extract DB data
 		DB db = new DB(getContext(), null);
 		// day cash
-		String c = db.getDayAmount(getDate(), "cash");
+		String c = db.getDayAmount(getDate(), "Cash");
 		if (!c.isEmpty()) {
 			float in = Float.parseFloat(c);
 			txtAmountCashJobs.setText(dec.format(in));
 		}
 		// dat account
-		String a = db.getDayAmount(getDate(), "account");
+		String a = db.getDayAmount(getDate(), "Account");
 		if (!a.isEmpty()) {
 			float in = Float.parseFloat(a);
 			txtAmountAccJobs.setText(dec.format(in));
@@ -188,7 +188,6 @@ public class DayFragment extends Fragment {
 	 * >Communicating with Other Fragments</a> for more information.
 	 */
 	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
 		void onFragmentInteraction(Uri uri);
 	}
 }

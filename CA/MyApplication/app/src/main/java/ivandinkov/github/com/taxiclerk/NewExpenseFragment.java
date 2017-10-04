@@ -35,6 +35,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,6 +91,7 @@ public class NewExpenseFragment extends Fragment {
 	private String endImage;
 	private boolean isPhotoTaken = false;
 	static final int REQUEST_TAKE_PHOTO = 1;
+	private Spinner spinnerExpType;
 	
 	
 	public NewExpenseFragment() {
@@ -140,9 +142,16 @@ public class NewExpenseFragment extends Fragment {
 		ImageView imgCam = (ImageView) view.findViewById(R.id.imageCam);
 		ImageView imgExpCalendar = (ImageView) view.findViewById(R.id.imageExpCalendar);
 		txtCurDate = (TextView) view.findViewById(R.id.textViewCurDateExp);
-		
+//		To be done
+//		spinnerExpType= (Spinner) view.findViewById(R.id.spinnerExpType);
+//		ArrayAdapter<CharSequence> adapterStations = ArrayAdapter.createFromResource(getActivity(),R.array.stations, android.R.layout.simple_spinner_item);
+//
+		//		adapterStations.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		spinnerExpType.setAdapter(adapterStations);
 		
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newExpenseLayoutWraper);
+		
+		
 		// Get device dimensions
 		DisplayMetrics dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
@@ -409,7 +418,6 @@ public class NewExpenseFragment extends Fragment {
 			btnYes.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO validate input
 					noteToBeSaved = txtNote.getText().toString();
 					alertDialogBuilder.cancel();
 				}
@@ -527,7 +535,7 @@ public class NewExpenseFragment extends Fragment {
 			c.set(y, month, day);
 			
 			sdf = new SimpleDateFormat("d MMM", Locale.ENGLISH);
-			sdfDB = new SimpleDateFormat("dd MM yyyy, HH:mm", Locale.ENGLISH);
+			sdfDB = new SimpleDateFormat("ddMMyyyyHHmm", Locale.ENGLISH);
 			
 			dateToDisplay = sdf.format(c.getTime());
 			dateToBeSaved = sdfDB.format(c.getTime());

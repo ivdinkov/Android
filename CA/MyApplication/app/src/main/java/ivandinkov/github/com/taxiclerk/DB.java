@@ -251,7 +251,10 @@ class DB extends SQLiteOpenHelper {
 		ArrayList<Expense> expList = new ArrayList<>();
 		
 		// Select All Query
-		String selectQuery = "SELECT * FROM " + TABLE_EXPENSE_TYPE + " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
+		String selectQuery = "SELECT * FROM "
+						+ TABLE_EXPENSE_TYPE
+						+ " WHERE "
+						+ KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		try{
@@ -294,7 +297,10 @@ class DB extends SQLiteOpenHelper {
 		ArrayList<String> expList = new ArrayList<String>();
 		
 		// Select All Query
-		String selectQuery = "SELECT " + KEY_EXPENSE_TYPE_NAME + " FROM " + TABLE_EXPENSE_TYPE + " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
+		String selectQuery = "SELECT " + KEY_EXPENSE_TYPE_NAME
+						+ " FROM "
+						+ TABLE_EXPENSE_TYPE
+						+ " WHERE " + KEY_EXPENSE_TYPE_ACTIVE + " LIKE 'yes'";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
 		try {
@@ -458,8 +464,12 @@ class DB extends SQLiteOpenHelper {
 	public String getDayAmount(String date,String type) {
 		String cashTotal = "";
 		SQLiteDatabase db = this.getReadableDatabase();
-		String sql = "SELECT SUM(CAST(" + KEY_INC_AMOUNT + " as DECIMAL(9,2))) FROM " + TABLE_INCOME
-						+ " WHERE " + KEY_INC_TYPE + " LIKE '" + type + "' AND " + KEY_INC_DATE + " LIKE '%" + date + "%'";
+		String sql = "SELECT SUM(CAST("
+						+ KEY_INC_AMOUNT
+						+ " as DECIMAL(9,2))) FROM "
+						+ TABLE_INCOME
+						+ " WHERE " + KEY_INC_TYPE + " LIKE '" + type
+						+ "' AND " + KEY_INC_DATE + " LIKE '%" + date + "%'";
 		Log.i(TAG,sql);
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
@@ -472,13 +482,16 @@ class DB extends SQLiteOpenHelper {
 		cursor.close();
 		return cashTotal;
 	}
+	
 	public String getDailyExp(String date) {
 		String total = "";
 		
 		SQLiteDatabase db = this.getReadableDatabase();
-		String sql = "SELECT SUM(CAST(" + KEY_EXP_AMOUNT + " as DECIMAL(9,2))) FROM " + TABLE_EXPENSE
-						+ " WHERE " + date + " LIKE '%" + date + "%'";
-		
+		String sql = "SELECT SUM(CAST("
+						+ KEY_EXP_AMOUNT
+						+ " as DECIMAL(9,2))) FROM "
+						+ TABLE_EXPENSE
+						+ " WHERE " + KEY_EXP_DATE + " LIKE '%" + date + "%'";
 		
 		Cursor cursor = db.rawQuery(sql, null);
 		if (cursor.moveToFirst()) {
@@ -497,7 +510,7 @@ class DB extends SQLiteOpenHelper {
 		int count = 0;
 		try {
 			Cursor c = null;
-			String query = "SELECT * FROM " + TABLE_INCOME + " WHERE " + KEY_INC_DATE + " LIKE '%" + date + "%'";
+			String query = "SELECT * FROM " + TABLE_INCOME + " WHERE " + KEY_INC_DATE + " LIKE '%" + date + "'";
 			c = db.rawQuery(query,null);
 			c.moveToFirst();
 			count = c.getCount();
