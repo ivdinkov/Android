@@ -32,7 +32,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -70,6 +69,7 @@ public class NewIncomeFragment extends Fragment {
 	private static String dateToDisplay;
 	private static String dateToBeSaved;
 	private static TextView txtCurDate;
+	private DisplayMetrics dm;
 	
 	
 	public NewIncomeFragment() {
@@ -104,7 +104,7 @@ public class NewIncomeFragment extends Fragment {
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_new_income, container, false);
@@ -122,12 +122,12 @@ public class NewIncomeFragment extends Fragment {
 		
 		LinearLayout linearLayout = (LinearLayout) view.findViewById(R.id.newIncomeLayoutWraper);
 		// Get device dimensions
-		DisplayMetrics dm = getWidthAndHeightPx();
+		dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
 		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
 		lpWrapper.rightMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
-		
+		 
 		// Get current date
 		try{
 			setCurrentDate();
@@ -146,11 +146,11 @@ public class NewIncomeFragment extends Fragment {
 		btnCancelNewIncome.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
-				buttonHolder.setVisibility(View.VISIBLE);
-				Fragment fragment = null;
+				//LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+//				buttonHolder.setVisibility(View.VISIBLE);
+//				Fragment fragment = null;
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				fragment = new HomeFragment();
+				Fragment fragment = new HomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 			}
@@ -161,21 +161,18 @@ public class NewIncomeFragment extends Fragment {
 			public void onClick(View v) {
 				// validate input
 				if (providerToBeSaved == null || incomeAmountToBeSaved == null) {
-					Toast toast = Toast.makeText(getActivity(), "Incomplete details", Toast.LENGTH_LONG);
-					toast.setGravity(Gravity.TOP, 0, 0);
-					toast.show();
+					CustomeToast.ShowToast(getActivity(),getView(),inflater,"Incomplete details!");
 				} else {
 					// save the new income to db
 					DB db = new DB(getActivity(), null);
 					db.saveNewIncome(new Income(dateToBeSaved, incomePymentTypeToBeSaved, incomeAmountToBeSaved, noteToBeSaved, providerToBeSaved));
 					
 					noteToBeSaved = "";
-					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
-					buttonHolder.setVisibility(View.VISIBLE);
+//					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+//					buttonHolder.setVisibility(View.VISIBLE);
 					
-					Fragment fragment = null;
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
-					fragment = new HomeFragment();
+					Fragment fragment = new HomeFragment();
 					ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 					ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 				}
@@ -276,6 +273,7 @@ public class NewIncomeFragment extends Fragment {
 		});
 		return view;
 	}
+	
 	
 	
 	private ArrayList<String> getProviders() {

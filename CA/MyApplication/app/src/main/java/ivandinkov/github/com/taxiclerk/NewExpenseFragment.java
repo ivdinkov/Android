@@ -52,6 +52,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.zip.Inflater;
 
 import static android.app.Activity.RESULT_OK;
 //import static ivandinkov.github.com.taxiclerk.R.id.imageView;
@@ -92,6 +93,8 @@ public class NewExpenseFragment extends Fragment {
 	private boolean isPhotoTaken = false;
 	static final int REQUEST_TAKE_PHOTO = 1;
 	private Spinner spinnerExpType;
+	private DisplayMetrics dm;
+	private LayoutInflater _inflater;
 	
 	
 	public NewExpenseFragment() {
@@ -125,8 +128,9 @@ public class NewExpenseFragment extends Fragment {
 	}
 	
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(final LayoutInflater inflater, ViewGroup container,
 													 Bundle savedInstanceState) {
+		this._inflater = inflater;
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.fragment_new_expense, container, false);
 		
@@ -153,7 +157,7 @@ public class NewExpenseFragment extends Fragment {
 		
 		
 		// Get device dimensions
-		DisplayMetrics dm = getWidthAndHeightPx();
+		dm = getWidthAndHeightPx();
 		// Set register layout holder to 80% width
 		FrameLayout.LayoutParams lpWrapper = (FrameLayout.LayoutParams) linearLayout.getLayoutParams();
 		lpWrapper.leftMargin = (dm.widthPixels - (int) (dm.widthPixels * 0.8)) / 2;
@@ -184,11 +188,11 @@ public class NewExpenseFragment extends Fragment {
 		btnCancelNewExpense.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
-				buttonHolder.setVisibility(View.VISIBLE);
-				Fragment fragment = null;
+//				LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+//				buttonHolder.setVisibility(View.VISIBLE);
+				
 				FragmentTransaction ft = getFragmentManager().beginTransaction();
-				fragment = new HomeFragment();
+				Fragment fragment = new HomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 			}
@@ -201,9 +205,7 @@ public class NewExpenseFragment extends Fragment {
 				imm.hideSoftInputFromWindow(btnSaveNewExpense.getWindowToken(), 0);
 				// validate input
 				if (expensePaymentTypeToBeSaved == null || expenseAmountToBeSaved == null || expenseTypeToBeSaved == null) {
-					Toast toast = Toast.makeText(getActivity(), "Incomplete details", Toast.LENGTH_LONG);
-					toast.setGravity(Gravity.TOP, 0, 0);
-					toast.show();
+					CustomeToast.ShowToast(getActivity(),getView(),inflater,"Incomplete details!");
 				} else {
 					// save the new income to db
 					DB db = new DB(getActivity(), null);
@@ -218,12 +220,11 @@ public class NewExpenseFragment extends Fragment {
 					
 					db.saveNewExpense(new MExpense(dateToBeSaved, expensePaymentTypeToBeSaved, expenseAmountToBeSaved, noteToBeSaved, expenseTypeToBeSaved, endImage));
 					Log.i(TAG,"new expanse:  pay type: " + expensePaymentTypeToBeSaved+ "note: " + noteToBeSaved + "exp type: " + expenseTypeToBeSaved + "img: " + endImage);
-					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
-					buttonHolder.setVisibility(View.VISIBLE);
+//					LinearLayout buttonHolder = (LinearLayout) getActivity().findViewById(R.id.income_button_holder);
+//					buttonHolder.setVisibility(View.VISIBLE);
 					
-					Fragment fragment = null;
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
-					fragment = new HomeFragment();
+					Fragment fragment = new HomeFragment();
 					ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 					ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 				}
@@ -374,10 +375,7 @@ public class NewExpenseFragment extends Fragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
 			isPhotoTaken = true;
-			Toast toast = Toast.makeText(getActivity(), "Image save success", Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.TOP, 0, 0);
-			toast.show();
-			
+			CustomeToast.ShowToast(getActivity(),getView(),_inflater,"Image saved success!");
 		}
 	}
 	

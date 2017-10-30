@@ -12,5 +12,6 @@
     <dimen name="btn_job_exp">50dp</dimen>
     <dimen name="trezerodp">30dp</dimen>
     <dimen name="ten_dp">10dp</dimen>
+    <dimen name="fifteen_sp">15sp</dimen>
 
 </resources>

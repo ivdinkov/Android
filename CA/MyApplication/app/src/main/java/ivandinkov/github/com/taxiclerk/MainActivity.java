@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity
 
 {
 	private static final String TAG = "TC";
-	private LinearLayout btnHolder;
-	private boolean isFirstTime = true;
 	private FirebaseAuth firebaseAuth;
 	
 	@Override
@@ -70,39 +68,7 @@ public class MainActivity extends AppCompatActivity
 		if (savedInstanceState == null) {
 			// on first time display view for first nav item
 			displayView(1);
-			isFirstTime = false;
 		}
-		// get linear layout reference
-		btnHolder = (LinearLayout) findViewById(R.id.income_button_holder);
-		
-		Button btnAddFare = (Button) findViewById(R.id.new_fare);
-		btnAddFare.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Fragment fragment = null;
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				// Hide buttons to make space for new income fragment
-				btnHolder.setVisibility(View.GONE);
-				// Show Settings
-				fragment = new NewIncomeFragment();
-				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-				ft.replace(R.id.main_fragment_container, fragment, "new fare").commit();
-			}
-		});
-		Button btnAddExpense = (Button) findViewById(R.id.new_expense);
-		btnAddExpense.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Fragment fragment = null;
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				// Hide buttons to make space for new expense fragment
-				btnHolder.setVisibility(View.GONE);
-				// Show Settings
-				fragment = new NewExpenseFragment();
-				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-				ft.replace(R.id.main_fragment_container, fragment, "new expense").commit();
-			}
-		});
 		
 	}
 	
@@ -112,55 +78,41 @@ public class MainActivity extends AppCompatActivity
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		switch (position) {
 			case 1:
-				// Show buttons
-				if (!isFirstTime) {
-					btnHolder.setVisibility(View.VISIBLE);
-				}
 				fragment = new HomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "home").commit();
 				break;
 			case 2:
-				// Hide buttons to make space for settings fragment
-				btnHolder.setVisibility(View.GONE);
 				// Show all Jobs
 				fragment = new IncomeFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "income").commit();
 				break;
 			case 3:
-				// Hide buttons to make space for settings fragment
-				btnHolder.setVisibility(View.GONE);
 				// Show All expenses
 				fragment = new ExpenseFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "expense").commit();
 				break;
 			case 4:
-				// Hide buttons to make space for settings fragment
-				btnHolder.setVisibility(View.GONE);
 				// Show Reports
 				fragment = new ReportFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "reports").commit();
 				break;
 			case 5:
-				// Hide buttons to make space for settings fragment
-				btnHolder.setVisibility(View.GONE);
 				// Show Settings
 				fragment = new SettingsFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 6:
-				btnHolder.setVisibility(View.GONE);
 				// Show train fragment
 				fragment = new TrainFragment();
 				ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
 				ft.replace(R.id.main_fragment_container, fragment, "settings").commit();
 				break;
 			case 7:
-				btnHolder.setVisibility(View.GONE);
 				// Send feedback
 				sendEmailFeedback();
 				break;
@@ -214,8 +166,6 @@ public class MainActivity extends AppCompatActivity
 		} else {
 			// Disable Android back button
 			displayView(1);
-			// Show buttons
-			btnHolder.setVisibility(View.VISIBLE);
 		}
 	}
 	
@@ -234,10 +184,20 @@ public class MainActivity extends AppCompatActivity
 		int id = item.getItemId();
 		
 		//noinspection SimplifiableIfStatement
-		if (id == R.id.action_settings) {
+		if (id == R.id.add_job) {
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			Fragment fragment = new NewIncomeFragment();
+			ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+			ft.replace(R.id.main_fragment_container, fragment, "new fare").commit();
 			return true;
 		}
-		
+		else if(id == R.id.add_expense){
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			Fragment fragment = new NewExpenseFragment();
+			ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+			ft.replace(R.id.main_fragment_container, fragment, "new expense").commit();
+			return true;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	
