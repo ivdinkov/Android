@@ -1,3 +1,3 @@
-# id_mad
-Ivan Dinkov 
+# Android
 Mobile Application Development
+Coursera course and college work
